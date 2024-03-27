@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 from CustomAstromodels import C_Band
 
-path = "/home/moej56153/Master_Thesis/main_files/spimodfit_fits"
+path = "./main_files/spimodfit_fits"
 
 def powerlaw(piv=100):
     spec = Powerlaw()
@@ -81,7 +81,7 @@ def c_band_func(piv=100):
 
 def data_crab(e_range, folder):
     d = OGIPLike("crab",
-                observation=f'{folder}/spectra_Crab_Nebula.fits',
+                observation=f'{folder}/spectra_Crab.fits', # changed filename form spectra_Crab_Nebula.fits
                 response=f'{folder}/spectral_response.rmf.fits')
     
     d.set_active_measurements(e_range)
@@ -197,9 +197,9 @@ folders = [
 for folder in folders:
     l_path = f"{path}/{folder}"
 
-    # low_energy_pl(l_path)
+    low_energy_pl(l_path)
     # sm_brk_pl(l_path)
     # pulsar_pl(l_path)
     # br_pl_100(l_path)
     # c_band(l_path)
-    med_energy_pl(l_path)
+    # med_energy_pl(l_path)

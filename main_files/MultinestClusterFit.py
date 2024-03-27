@@ -267,7 +267,8 @@ def sample_count_rates(
     return expected_counts_combination
 
 def extract_pointing_info(path, p_id):
-    num_dets = 19
+    num_dets = 19 
+
     with fits.open(f"{path}/pointing.fits") as file:
         t = Table.read(file[1])
         index = np.argwhere(t["PTID_ISOC"]==p_id[:8])
