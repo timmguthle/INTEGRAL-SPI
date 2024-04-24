@@ -1,3 +1,6 @@
+# this script is used to plot the background spectrum of a pointing for the real data and compare it with a simulated source. 
+
+
 import sys, os
 sys.path.insert(0, os.path.abspath('./main_files'))
 
