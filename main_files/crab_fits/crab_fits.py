@@ -364,6 +364,7 @@ def crab_pulsar_sm_br_pl_comb_rev_fits(data_folder=data_folder, combined_fits=co
 
 def crab_pulsar_lower_band_comb_rev_fits(data_folder=data_folder, combined_fits=combined_fits_weak_pulsar, fit_folder=fit_folder):
     # defining source models for crab and the other sometimes flaring Pulsar
+    # returns a model with the arguments as the sources of the model
     source_model = define_sources((
         (crab_lower_band, (100,)),
         (s_1A_0535_262_pl, (100,)),
