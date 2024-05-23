@@ -702,9 +702,7 @@ class MultinestClusterFit:
 
     
     def _initialize_resp_mats(self):
-        # index order: tuple(combina
-        # 
-        tion, source, pointing, np_array(dets, e_in, e_out))
+        # index order: tuple(combination, source, pointing, np_array(dets, e_in, e_out))
         resp_mats = []
         rmfs = []
         
