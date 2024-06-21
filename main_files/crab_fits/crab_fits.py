@@ -379,12 +379,19 @@ def crab_pulsar_lower_band_comb_rev_fits(data_folder=data_folder, combined_fits=
         if not os.path.exists(f"{path_ff}"):
             os.mkdir(f"{path_ff}")
         
+
         pointings = ()
         for rev in revs:
-            path_d = f"{data_folder}/{rev}"
-            r_pointings = load_clusters(path_d)
-            outliers = load_outliers(outliers_folder, rev)
-            pointings += remove_outlier_clusters(r_pointings, outliers)
+            pointings += PointingClusters(
+                (f'{data_folder}/{rev}',),
+                min_angle_dif=1.5,
+                max_angle_dif=7.5,
+                max_time_dif=0.2,
+                radius_around_source=10.,
+                min_time_elapsed=600.,
+                cluster_size_range=(2,2),
+            ).pointings
+
         
         multinest_fit = MultinestClusterFit(
             pointings,
@@ -452,6 +459,7 @@ def crab_pulsar_br_pl_100_comb_rev_fits(data_folder=data_folder, combined_fits=c
 # crab_pulsar_sm_br_pl_ind_rev_fits(revolutions=["1664"])
 # crab_pulsar_pl_comb_rev_fits(combined_fits=combined_fits_strong_pulsar_sm)
 # crab_pulsar_sm_br_pl_comb_rev_fits(combined_fits=combined_fits_repeat_w_residuals)
+#crab_pulsar_lower_band_comb_rev_fits(combined_fits={"0043": ["0043"]})
 crab_pulsar_lower_band_comb_rev_fits(combined_fits={"0422": ["0422"]})
 # crab_pulsar_br_pl_100_comb_rev_fits(combined_fits=combined_fits_repeat_w_residuals)
 #crab_pulsar_pl_comb_rev_fits_50_100()

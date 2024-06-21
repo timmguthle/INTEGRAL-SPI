@@ -21,11 +21,11 @@ from scipy.stats import poisson, norm
 # generate a list of all versions would only be better if there are several pointing that need different irf versions
 
 
-#rsp_bases = tuple([ResponseDataRMF.from_version(i) for i in range(5)])
+rsp_bases = tuple([ResponseDataRMF.from_version(i) for i in range(5)])
 
 # solution for now: hardcode the solution. should be fixed in the future!!!
 # this only works for simulations. For fitting Crab we need all the irfs again
-rsp_bases = {2:ResponseDataRMF.from_version(2)}
+#rsp_bases = {2:ResponseDataRMF.from_version(2)}
 
 
 

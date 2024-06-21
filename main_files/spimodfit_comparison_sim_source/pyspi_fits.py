@@ -15,7 +15,7 @@ import pickle
 def pyspi_real_bkg_fit_0374_pre_ppc():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_control/{rev}"
     # fit_path = f"{data_path}/pre_ppc_far"
     fit_path = f"{data_path}/pre_ppc"
     
@@ -58,7 +58,7 @@ def pyspi_real_bkg_fit_0374_pre_ppc():
     )
     multinest_fit.parameter_fit_distribution()
     multinest_fit.text_summaries(pointing_combinations=True, reference_values=False, parameter_fit_constraints=False)
-    multinest_fit.ppc()
+    #multinest_fit.ppc()
     
     p = ["Simulated Source 0374 K", "Simulated Source 0374 index"]
     val = np.array([i[1] for i in multinest_fit._cc.analysis.get_summary(parameters=p).values()])
@@ -653,7 +653,7 @@ def pyspi_real_bkg_fit_0374_far_ind():
 
 
 
-pyspi_smf_bkg_fit_0374_pre_ppc()
+#pyspi_smf_bkg_fit_0374_pre_ppc()
 # pyspi_const_bkg_fit_0374_pre_ppc()
-
+pyspi_real_bkg_fit_0374_pre_ppc()
 

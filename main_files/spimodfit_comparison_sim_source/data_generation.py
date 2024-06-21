@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.abspath('./main_files'))
 import numpy as np
 import astropy.io.fits as fits
 from astropy.table import Table
-from astromodels import Powerlaw,  PointSource, SpectralComponent
+from astromodels import Powerlaw, PointSource, SpectralComponent
 import astropy.time as at
 from datetime import datetime
 from pyspi.utils.function_utils import find_response_version
@@ -107,7 +107,7 @@ def calc_source_counts():
 
 
 def pyspi_real_bkg():
-    destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg/{revolution}"
+    destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_control/{revolution}"
     
     # Energy Bins
     with fits.open(f"{data_path}/energy_boundaries.fits") as file:
@@ -185,7 +185,7 @@ def pyspi_real_bkg():
     os.popen(f"cp {data_path}/dead_time.fits {destination_path}/dead_time.fits")
 
 
-# pyspi_real_bkg()
+pyspi_real_bkg()
 
 
 # Sim source data for spimodfit
@@ -393,7 +393,7 @@ def smf_bkg():
     os.popen(f"cp {spimodfit_folder}/dead_time.fits.gz {smf_data_path2}/dead_time.fits.gz")
     
     
-smf_bkg()
+#smf_bkg()
 
 
 
