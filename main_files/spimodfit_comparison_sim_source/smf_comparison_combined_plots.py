@@ -42,14 +42,15 @@ path = "./main_files/spimodfit_comparison_sim_source"
 real_vals = [6e-3, -2]
 
 folders = [
-    f"{path}/pyspi_real_bkg/0374/pre_ppc",
+    f"{path}/pyspi_real_bkg_Timm2/0374/pre_ppc",
+    f"{path}/pyspi_real_bkg_Timm1/0374/pre_ppc",
     # f"{path}/pyspi_real_bkg/0374/post_ppc",
-    f"{path}/pyspi_smf_bkg/0374/pre_ppc",
+    f"{path}/pyspi_real_bkg_Timm1/0374/pre_ppc_triple",
     # f"{path}/pyspi_smf_bkg/0374/post_ppc",
-    f"{path}/pyspi_const_bkg/0374/pre_ppc",
+    f"{path}/pyspi_const_bkg_Timm2/0374/pre_ppc",
     
     f"{path}/spimodfit_fits/0374_real_bkg",
-    f"{path}/spimodfit_fits/0374_smf_bkg",
+    f"{path}/spimodfit_fits/0374_real_bkg_Timm2",
 ]
 
 d_M = []
@@ -59,20 +60,21 @@ for i in range(len(folders)):
     d_M.append(mahalanobis_dist(val, cov, real_vals))
 
 names = [
-    "PySpi Real Bkg",
+    "PySpi Real Bkg Timm2",
+    "PySpi Real Bkg Timm1",
     # "PySpi Real Bkg Post-PPC",
-    "PySpi SMF Bkg",
+    "PySpi Real Bkg Triple Timm1",
     # "PySpi SMF Bkg Post-PPC",
-    "PySpi Const Bkg",
+    "PySpi Const Bkg Timm2",
     "Spimodfit Real Bkg",
-    "Spimodfit SMF Bkg"
+    "Spimodfit Real Bkg Timm2"
 ]
 
 names = [f"{names[i]}: $d_M$ = {d_M[i]:.3f}" for i in range(len(d_M))]
 
 edgecolors = [
     "C0",
-    # "C0",
+    "C3",
     "C1",
     # "C1",
     "C2",
@@ -82,7 +84,7 @@ edgecolors = [
 ]
 linestyles = [
     "solid",
-    # "dotted",
+    "dotted",
     "solid",
     # "dotted",
     "solid",
@@ -100,4 +102,4 @@ ax.autoscale()
 lgd = plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
 plt.xlabel("K [keV$^{-1}$s$^{-1}$cm$^{-2}$]")
 plt.ylabel("index")
-plt.savefig(f"{path}/spimodfit_comparison_combined_plot.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')
+plt.savefig(f"{path}/spimodfit_comparison_combined_plot_Timm1.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')

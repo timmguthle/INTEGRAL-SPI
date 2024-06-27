@@ -25,8 +25,11 @@ from MultinestClusterFit import powerlaw_binned_spectrum
 revolution = "0374"
 
 
-data_path = f"./main_files/SPI_data/{revolution}"
+#data_path = f"./main_files/SPI_data/{revolution}"
 # data_path = "./main_files/SPI_data/1380"
+data_path = f"./spiselect_SPI_Data/{revolution}"
+#data_path = f"./afs_SPI_Data/{revolution}"
+
 
 ra, dec = 10, -40
 K, piv, index = 6e-3, 40, -2
@@ -107,7 +110,7 @@ def calc_source_counts():
 
 
 def pyspi_real_bkg():
-    destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_control/{revolution}"
+    destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2/{revolution}"
     
     # Energy Bins
     with fits.open(f"{data_path}/energy_boundaries.fits") as file:
@@ -165,6 +168,7 @@ def pyspi_real_bkg():
         
         for d_i, d in enumerate(dets):
             index = p_i * 85 + d
+            # Why do I have to use the poisson distribution here? Cant I just use the count rates?
             source_counts[index,:] = np.random.poisson(count_rates[d_i,:] * time_elapsed[index])    
 
     # Save Data for PySpi
@@ -185,7 +189,7 @@ def pyspi_real_bkg():
     os.popen(f"cp {data_path}/dead_time.fits {destination_path}/dead_time.fits")
 
 
-pyspi_real_bkg()
+#pyspi_real_bkg()
 
 
 # Sim source data for spimodfit
@@ -218,7 +222,7 @@ def spimodfit_real_bkg():
         for i, p in enumerate(spimodfit_pointings):
             temp = np.argwhere(t["PTID_ISOC"]==p)
             if len(temp)>0:
-                p_indices.append(temp[0][0])
+                p_indices.append(temp[0][0]) # we expect only one item in temp
                 p_rel_indices.append(i)
 
     # Energy Indices
@@ -242,6 +246,7 @@ def spimodfit_real_bkg():
         for j in range(19):
             rd_indices.append(i*19 + j)
     # evts_det_spec.fits.gz
+    # this file should already be modified with the source counts
     with fits.open(f"{data_path}/evts_det_spec.fits") as file:
         t = Table.read(file[1])
         
@@ -251,15 +256,18 @@ def spimodfit_real_bkg():
         
     eds_temp = t[se_indices]
 
-
+    # rebinning of the julius data to the spimodfit nr of bins and writing it to the spimodfit data
     for i in range(len(e_indices)-1):
         d["COUNTS"][:,i] = np.sum(eds_temp["COUNTS"][ : , e_indices[i] : e_indices[i+1]], axis=1)
+
+
         
     hdu = fits.BinTableHDU(data=d, name="SPI.-OBS.-DSP")
     hdu.header = h
     hdu.writeto(f"{spimodfit_folder}/evts_det_spec.fits.gz")
     
     
+
 
 # spimodfit_real_bkg()
 
@@ -399,10 +407,10 @@ def smf_bkg():
 
 # PySpi with constant background
 
-pointing_index = 1 # 0374
+pointing_index = 32 # 0374
 # pointing_index = 4 # 1380
 
-data_path3 = f"./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg/{revolution}"
+data_path3 = f"./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/{revolution}"
 # data_path3 = "crab_data/1380_const_bkg"
 
 def pyspi_const_bkg():
@@ -487,7 +495,7 @@ def pyspi_const_bkg():
         else:
             updated_counts[i*85 : (i+1)*85] = updated_counts[pointing_index*85 : (pointing_index+1)*85]
             
-    updated_counts["COUNTS"] = np.random.poisson(updated_counts["COUNTS"])
+    updated_counts["COUNTS"] = np.random.poisson(updated_counts["COUNTS"]) # Warum wird hier nochmal eine Poisson-Verteilung verwendet?
 
     updated_counts["COUNTS"] += source_counts
 
@@ -498,5 +506,5 @@ def pyspi_const_bkg():
     os.popen(f"cp {data_path}/pointing.fits {data_path3}/pointing.fits")
 
 
-# pyspi_const_bkg()
+#pyspi_const_bkg()
 

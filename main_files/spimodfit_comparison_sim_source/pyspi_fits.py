@@ -15,7 +15,8 @@ import pickle
 def pyspi_real_bkg_fit_0374_pre_ppc():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_control/{rev}"
+    #data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_control/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2/{rev}"
     # fit_path = f"{data_path}/pre_ppc_far"
     fit_path = f"{data_path}/pre_ppc"
     
@@ -70,7 +71,7 @@ def pyspi_real_bkg_fit_0374_pre_ppc():
 def pyspi_real_bkg_fit_0374_pre_ppc_far():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm1/{rev}"
     fit_path = f"{data_path}/pre_ppc_far"
     # fit_path = f"{data_path}/pre_ppc"
     
@@ -192,7 +193,7 @@ def pyspi_real_bkg_fit_0374_post_ppc():
 def pyspi_real_bkg_fit_0374_post_ppc_far():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm1/{rev}"
     # pointings_path = f"{data_path}/pre_ppc"
     # fit_path = f"{data_path}/post_ppc"
     pointings_path = f"{data_path}/pre_ppc_far"
@@ -265,7 +266,7 @@ def pyspi_real_bkg_fit_0374_post_ppc_far():
 def pyspi_real_bkg_fit_0374_pre_ppc_triple():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm1/{rev}"
     fit_path = f"{data_path}/pre_ppc_triple"
     
     if not os.path.exists(f"{fit_path}"):
@@ -504,24 +505,24 @@ def pyspi_smf_bkg_fit_0374_post_ppc():
 def pyspi_const_bkg_fit_0374_pre_ppc():
     rev = "0374"
     ra, dec = 10, -40
-    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg/{rev}"
+    data_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/{rev}"
     fit_path = f"{data_path}/pre_ppc"
     
     if not os.path.exists(f"{fit_path}"):
         os.mkdir(f"{fit_path}")
     
-    # pointings = PointingClusters(
-    #         (data_path,),
-    #         min_angle_dif=1.5,
-    #         max_angle_dif=10.,
-    #         max_time_dif=0.2,
-    #         radius_around_source=10.,
-    #         min_time_elapsed=300.,
-    #         cluster_size_range=(2,2),
-    #         center_ra=ra,
-    #         center_dec=dec,
-    #     ).pointings
-    # save_clusters(pointings, fit_path)
+    pointings = PointingClusters(
+            (data_path,),
+            min_angle_dif=1.5,
+            max_angle_dif=10.,
+            max_time_dif=0.2,
+            radius_around_source=10.,
+            min_time_elapsed=300.,
+            cluster_size_range=(2,2),
+            center_ra=ra,
+            center_dec=dec,
+        ).pointings
+    save_clusters(pointings, fit_path)
     
     pointings = load_clusters(fit_path)
     
@@ -539,14 +540,14 @@ def pyspi_const_bkg_fit_0374_pre_ppc():
         source_model,
         (30., 400.,),
         np.geomspace(18, 600, 50),
-        # log_binning_function_for_x_number_of_bins(70),
+        #log_binning_function_for_x_number_of_bins(70),
         spimodfit_binning_SE,
         # true_values=true_values(),
         folder=fit_path,
     )
     multinest_fit.parameter_fit_distribution()
     multinest_fit.text_summaries(pointing_combinations=True, reference_values=False, parameter_fit_constraints=False)
-    multinest_fit.ppc()
+    #multinest_fit.ppc()
     
     p = ["Simulated Source 0374 K", "Simulated Source 0374 index"]
     val = np.array([i[1] for i in multinest_fit._cc.analysis.get_summary(parameters=p).values()])
@@ -655,5 +656,6 @@ def pyspi_real_bkg_fit_0374_far_ind():
 
 #pyspi_smf_bkg_fit_0374_pre_ppc()
 # pyspi_const_bkg_fit_0374_pre_ppc()
-pyspi_real_bkg_fit_0374_pre_ppc()
-
+#pyspi_real_bkg_fit_0374_pre_ppc()
+#pyspi_real_bkg_fit_0374_pre_ppc_triple()
+pyspi_const_bkg_fit_0374_pre_ppc()
