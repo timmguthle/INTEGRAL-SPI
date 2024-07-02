@@ -172,6 +172,25 @@ def simulated_pl_0374(model, piv):
     model.add_source(ps)
     return model
 
+def sweep_search_pl_0374(model, piv, ra, dec):
+    """
+    Use this model to search for the source in the field of view.
+    The goal is to check if somewhere in the field of view there is a source that can be detected and is not accounted for.
+    
+    
+    """
+    pl = Powerlaw()
+    pl.piv = piv
+    pl.K.prior = Log_uniform_prior(lower_bound=1e-7, upper_bound=1e0)
+    pl.index.prior = Uniform_prior(lower_bound=-12, upper_bound=4)
+    pl.index.min_value = -12.5
+    component1 = SpectralComponent("pl", shape=pl)
+    ps = PointSource("Potential_Source_0374", ra=ra, dec=dec, components=[component1])
+    
+    model.add_source(ps)
+    return model
+
+
 def simulated_pl_0422(model, piv):
     """
     new simulation function for rev 0422 with adjusted coordinates. everything else stays the same.

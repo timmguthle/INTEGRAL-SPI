@@ -21,6 +21,7 @@ center_simulation = '312deg -76deg' # entspricht -48deg -76deg
 
 class SpimselectDownloader():
     """
+    # Parameters
     name: str, name of the dataset
     revolutions: list, list of revolutions to be included in the dataset
     E_Bins: list, list of energy bins to be used in the analysis. default is wide_E_Bins
@@ -505,19 +506,20 @@ if __name__ == '__main__':
     # gen.generate_scripts()
     # gen.runscripts()
     # gen.plot_skymap_aitoff(radius='30deg')
-    downloader = SpimselectDownloader('374_const_bkg', [374], center=False, E_Bins=normal_E_Bins)
-    downloader.generate_and_run()
-    downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/")
-    wrapper = SpimodfitWrapper('374_const_bkg', [374], source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
-    wrapper.generate_scripts()
+    downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
+    #downloader.generate_and_run()
+    #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")
+    #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/")
+    wrapper = SpimodfitWrapper('374_real_bkg_para2', [374], source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
+    #wrapper.generate_scripts()
 
 
-    wrapper.run_background()
-    wrapper.run_spimodfit()
+    #wrapper.run_background()
+    #wrapper.run_spimodfit()
     wrapper.run_adjust4threeML()
-    #
+    # #
     
-    wrapper.plot_skymap_aitoff(radius='30deg', center=center_simulation, center_skymap=center_simulation)
+    #wrapper.plot_skymap_aitoff(radius='30deg', center=center_simulation, center_skymap=center_simulation)
 
     # downloader.generate_and_run()
     # downloader.adjust_for_pyspi()

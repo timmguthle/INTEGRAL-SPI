@@ -42,12 +42,12 @@ path = "./main_files/spimodfit_comparison_sim_source"
 real_vals = [6e-3, -2]
 
 folders = [
-    f"{path}/pyspi_real_bkg_Timm2/0374/pre_ppc",
-    f"{path}/pyspi_real_bkg_Timm1/0374/pre_ppc",
+    f"{path}/pyspi_real_bkg/0374/pre_ppc",
+    f"{path}/pyspi_const_bkg/0374/pre_ppc",
     # f"{path}/pyspi_real_bkg/0374/post_ppc",
-    f"{path}/pyspi_real_bkg_Timm1/0374/pre_ppc_triple",
+    f"{path}/pyspi_real_bkg_Timm1/0374/pre_ppc_all_energy",
     # f"{path}/pyspi_smf_bkg/0374/post_ppc",
-    f"{path}/pyspi_const_bkg_Timm2/0374/pre_ppc",
+    f"{path}/pyspi_const_bkg_Timm13/0374/pre_ppc_wider_energy_range",
     
     f"{path}/spimodfit_fits/0374_real_bkg",
     f"{path}/spimodfit_fits/0374_real_bkg_Timm2",
@@ -60,12 +60,12 @@ for i in range(len(folders)):
     d_M.append(mahalanobis_dist(val, cov, real_vals))
 
 names = [
-    "PySpi Real Bkg Timm2",
-    "PySpi Real Bkg Timm1",
+    "PySpi Real Bkg",
+    "PySpi Const Bkg",
     # "PySpi Real Bkg Post-PPC",
-    "PySpi Real Bkg Triple Timm1",
+    "PySpi Real Bkg wide Energy Timm1",
     # "PySpi SMF Bkg Post-PPC",
-    "PySpi Const Bkg Timm2",
+    "PySpi Const Bkg Timm2 wide Energy",
     "Spimodfit Real Bkg",
     "Spimodfit Real Bkg Timm2"
 ]
@@ -102,4 +102,4 @@ ax.autoscale()
 lgd = plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
 plt.xlabel("K [keV$^{-1}$s$^{-1}$cm$^{-2}$]")
 plt.ylabel("index")
-plt.savefig(f"{path}/spimodfit_comparison_combined_plot_Timm1.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')
+plt.savefig(f"{path}/spimodfit_comparison_combined_plot_Timm_v2.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')

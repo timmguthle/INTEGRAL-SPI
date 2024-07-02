@@ -38,9 +38,9 @@ def confidence_ellipse(val, cov, ax, n_std=1.0, facecolor='none', **kwargs):
 path = "./main_files/pure_simulation_tests"
 
 def repeated_identical():
-    l_path = f"{path}/identical_repeats"
+    l_path = f"{path}/identical_repeats_Timm1"
     
-    repeats = 8
+    repeats = 2
     
     with open(f"{l_path}/source_params.pickle", "rb") as f:
         source_ra, source_dec, source_piv, source_K, source_index = pickle.load(f)
@@ -90,7 +90,7 @@ def repeated_identical():
     lgd = plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
     plt.xlabel("K [keV$^{-1}$s$^{-1}$cm$^{-2}$]")
     plt.ylabel("index")
-    plt.savefig(f"{path}/combined_plot_repeated_identical.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.savefig(f"{path}/combined_plot_repeated_identical_Timm2.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 def repeated_identical_new_gen():
     l_path = f"{path}/identical_repeats_new_gen"
@@ -885,12 +885,12 @@ def source_distances():
     plt.savefig(f"{path}/combined_plot_source_distances.pdf", bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 repeated_identical()
-repeated_identical_new_gen()
-num_e_bins()
-energy_range()
-data_scaling()
-cluster_size()
-different_sources()
-second_source()
-pointing_distances()
-source_distances()
+# repeated_identical_new_gen()
+# num_e_bins()
+# energy_range()
+# data_scaling()
+# cluster_size()
+# different_sources()
+# second_source()
+# pointing_distances()
+# source_distances()

@@ -11,45 +11,47 @@ import pickle
 
 
 def fit_identical():
-    data_folder = "./main_files/pure_simulation_tests/identical_repeats"
+    #data_folder = "./main_files/pure_simulation_tests/identical_repeats_Timm1"
+    data_folder = "./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm13/0374"
 
-    repeats = 4
+    repeats = 1
 
     # import the true paramter from the generated Data (corresponde to the 'true' point in the plot 2.1)
 
-    with open(f"{data_folder}/source_params.pickle", "rb") as f:
-        source_ra, source_dec, source_piv, source_Ks, source_indices = pickle.load(f)
+    # not used for now, later might need to uncomment it
+    #with open(f"{data_folder}/source_params.pickle", "rb") as f:
+    #   source_ra, source_dec, source_piv, source_Ks, source_indices = pickle.load(f)
         
     # one try to fix my problem: change the coordinates to fit with the chosen revolution. currently there is no correct pointing in the desired time frame
     # coordinated before: ra=10, dec=-40
     # changed to ra=83, dec=22 (should find at least one pointing with this configuration!)
-        
     # new base line revolution is 0422 (start 2006-03-28)
+    # the above commtents are for the use of rev 0422, which is not recomended, better use 0374
     
-    # pointings = PointingClusters(
-    #     (data_folder,),
-    #     min_angle_dif=1.5,
-    #     max_angle_dif=7.5,
-    #     max_time_dif=0.2,
-    #     radius_around_source=10.,
-    #     min_time_elapsed=300.,
-    #     cluster_size_range=(2,2),
-    #     center_ra=83.,
-    #     center_dec=22.,
-    # ).pointings
+    pointings = PointingClusters(
+        (data_folder,),
+        min_angle_dif=1.5,
+        max_angle_dif=7.5,
+        max_time_dif=0.2,
+        radius_around_source=10.,
+        min_time_elapsed=300.,
+        cluster_size_range=(2,2),
+        center_ra=10.,
+        center_dec=-40.,
+    ).pointings
     
     
-    #save_clusters(pointings, data_folder)
+    save_clusters(pointings, data_folder)
 
-    pointings = load_clusters(data_folder)
+    # pointings = load_clusters(data_folder)
     # define source model as powerlaw 
     source_model = define_sources((
-        (simulated_pl_0422, (200,)),
+        (simulated_pl_0374, (40,)),
     ))
 
     for i in range(repeats):
             
-        temp_path = f"{data_folder}/{i}-mpi_enabled"
+        temp_path = f"{data_folder}/{i}"
         if not os.path.exists(temp_path):
             os.makedirs(temp_path)
 
@@ -71,7 +73,7 @@ def fit_identical():
         
         # print(multinest_fit._cc._all_parameters)
         
-        p = ["Simulated Source 0422 K", "Simulated Source 0422 index"]
+        p = ["Simulated Source 0374 K", "Simulated Source 0374 index"]
         val = np.array([i[1] for i in multinest_fit._cc.analysis.get_summary(parameters=p).values()])
         cov = multinest_fit._cc.analysis.get_covariance(parameters=p)[1]
 

@@ -1,0 +1,8 @@
+Fit summary for Potential Source 0374
+Data path: /home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374
+Fit base path: /home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_test
+Energy pivot: 100
+Position: 10, -40; 0/1
+K: 1.3178653740556846e-07 +/- 1.1891334407380439e-06
+Index: -1.085368902250405 +/- 1.515470339782706
+

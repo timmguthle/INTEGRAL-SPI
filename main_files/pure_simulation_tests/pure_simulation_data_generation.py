@@ -19,15 +19,18 @@ import pickle
 def identical_repeats():
     # identical repeats
 
-    # use test_data instead of revolution 0374, adjust the coords
-    data_path = "./main_files/SPI_data/test_data"
-    source_ra, source_dec = 83., 22.
-    source_piv = 200.
-    source_K = 1e-4
+    # use test_data instead of revolution 0374, adjust the coords. Only use for 0422 (not realy good, because it shows crab. Ideally there should just be background)
+    #data_path = "./main_files/SPI_data/test_data"
+    #source_ra, source_dec = 83., 22.
+    
+    data_path = "./afs_SPI_Data/0374"
+    source_ra, source_dec = 10, -40
+    source_piv = 40.
+    source_K = 6e-3
     source_index = -2
     pointing_index = 1
 
-    data_path_d = "./main_files/pure_simulation_tests/identical_repeats"
+    data_path_d = "./main_files/pure_simulation_tests/identical_repeats_Timm1"
 
     if not os.path.exists(f"{data_path_d}"):
         os.mkdir(f"{data_path_d}")
