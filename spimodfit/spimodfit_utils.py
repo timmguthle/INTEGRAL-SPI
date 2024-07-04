@@ -17,7 +17,20 @@ from astropy.coordinates import SkyCoord
 
 normal_E_Bins = [20.0, 21.5, 23.5, 25.5, 27.5, 30.0, 32.5, 35.5, 38.5, 42.0, 45.5, 49.5, 54.0, 58.5, 63.5, 69.0, 75.0, 81.5, 89.0, 96.5, 105.0, 114.0, 124.0, 134.5, 146.0, 159.0, 172.5, 187.5, 204.0, 221.5, 240.5, 261.5, 284.0, 308.5, 335.5, 364.5, 396.0, 430.0, 467.5, 508.0, 514, 600]
 wide_E_Bins = [20, 29, 43, 62, 91, 132, 193, 282, 411, 600]
-center_simulation = '312deg -76deg' # entspricht -48deg -76deg
+center_simulation = '312deg -76deg' # entspricht -48deg -
+
+
+def read_summary_file(fit_base_path):
+    with open(f"{fit_base_path}/fit_summary.txt", "r") as f:
+        lines = f.readlines()
+        ra, dec, K = [], [], []
+        for line in lines:
+            if line.startswith("Position"):
+                ra.append(float(line.split()[1].strip(",")))
+                dec.append(float(line.split()[2].strip(";")))
+            elif line.startswith("K"):
+                K.append(float(line.split()[1]))
+    return ra, dec, K
 
 class SpimselectDownloader():
     """
@@ -430,12 +443,14 @@ class SpimodfitWrapper():
         print(f'{Fore.GREEN}skymap plotted and saved{Style.RESET_ALL}')
 
 
-    def plot_skymap_aitoff(self, center="180deg 0deg", radius='25deg', center_skymap='180deg 0deg', nside=64):
+    def plot_skymap_aitoff(self, center="180deg 0deg", radius='25deg', center_skymap='180deg 0deg', nside=64, sweep_search_path=None):
         """
         generate a skymap in aitoff projection. With a zoom panel to the side
         """
         os.makedirs(f"{self.base_dir}{self.name}_figures/", exist_ok=True)
         crab_center = SkyCoord.from_name("Crab")
+        if sweep_search_path:
+            ra, dec, K = read_summary_file(sweep_search_path)
 
         filepath = f"{self.base_dir}fit_Crab_{self.name}/residuals.fits"
         with fits.open(filepath) as hdul:
@@ -495,6 +510,12 @@ class SpimodfitWrapper():
                 marker=ligo.skymap.plot.reticle(),
                 markersize=30,
                 markeredgewidth=3)
+            
+            if sweep_search_path:
+                pos = ax2.scatter(ra, dec, c=K, transform=ax2.get_transform('fk5'), s=10, alpha=0.4)    
+                fig.colorbar(pos, ax=ax2, label="K")
+
+
         
             fig.savefig(f"{self.base_dir}{self.name}_figures/fig_{self.name}_{i}.png")
             print(f'{Fore.GREEN}skymap nr.{i} plotted and saved{Style.RESET_ALL}')
@@ -502,21 +523,22 @@ class SpimodfitWrapper():
 
 
 if __name__ == '__main__':
-    # gen = SpimodfitWrapper('skymap0044', [44])
+    gen = SpimodfitWrapper('skymap374-2', [374])
     # gen.generate_scripts()
     # gen.runscripts()
-    # gen.plot_skymap_aitoff(radius='30deg')
-    downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
+    gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation, sweep_search_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2")
+    #downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
     #downloader.generate_and_run()
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/")
-    wrapper = SpimodfitWrapper('374_real_bkg_para2', [374], source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
+    
+    #wrapper = SpimodfitWrapper('374_real_bkg_para2', [374], source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
     #wrapper.generate_scripts()
 
 
     #wrapper.run_background()
     #wrapper.run_spimodfit()
-    wrapper.run_adjust4threeML()
+    #wrapper.run_adjust4threeML()
     # #
     
     #wrapper.plot_skymap_aitoff(radius='30deg', center=center_simulation, center_skymap=center_simulation)

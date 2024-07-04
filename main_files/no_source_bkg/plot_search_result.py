@@ -5,8 +5,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import ligo.skymap.plot
 
+
 # center = "10deg -40deg"
-# center galactic coordinates 312deg -76deg
+# center galactic coordinates 312deg -
+
+def create_positions(n, delta=0.5):
+    """
+    Create a list of positions in a grid around (10, -40). Delta is the vertical and horizontal distance between the positions.
+    the grid is n x n. To center the grid n should be odd.
+    """
+    positions = []
+    for i in range(n//2, -n//2, -1):
+        for j in range(n//2, -n//2, -1):
+            positions.append([10+(i*delta), -40+(j*delta)])
+    return positions
+
 
 def read_summary_file(fit_base_path):
     with open(f"{fit_base_path}/fit_summary.txt", "r") as f:
@@ -40,6 +53,31 @@ def plot_result(fit_base_path):
     fig.savefig(f"{fit_base_path}/search_result.png")
 
 
+def plot_positions(positions, galactic=True, fit_base_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2"):
+
+    if not os.path.exists(fit_base_path):
+        os.makedirs(fit_base_path)
+
+    if not galactic:
+        fig, ax = plt.subplots(figsize=(5,4), subplot_kw={'projection': 'astro degrees zoom', 'center': '10deg -40deg', 'radius': '20deg'})
+    else:
+        fig, ax = plt.subplots(figsize=(5,4), subplot_kw={'projection': 'galactic degrees zoom', 'center': '312deg -76deg', 'radius': '20deg'})
+
+    ax.grid()
+    ax.set_title('Positions of Potential sources')
+
+    for ra, dec in positions:
+        ax.scatter(ra, dec, transform=ax.get_transform('fk5'), c='tab:blue', s=40)
+
+    fig.savefig(f"{fit_base_path}/positions.png")
+
+
+def sweep_search_3():
+    positions = create_positions(15, 2.25)
+    plot_positions(positions=positions, fit_base_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_3")
+
+
 if __name__ == "__main__":
     fit_base_path = "/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2"
-    plot_result(fit_base_path)
+    #plot_result(fit_base_path)
+    sweep_search_3()

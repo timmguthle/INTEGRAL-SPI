@@ -666,6 +666,8 @@ class MultinestClusterFit:
                     assert np.array_equal(dets_0, dets_temp), f"Active detectors are not the same for {combination[0][0]} and {combination[p_i][0]}"
                     assert np.array_equal(energy_bins_0, energy_bins), f"Energy bins are not the same for {combination[0][0]} and {combination[p_i][0]}"
                 
+
+            # binning function returns new bins in the given energy interval, returns ebins and the corrosponding counts
             eb, c = self._binning_func(
                 energy_bins_0,
                 c_counts_f,

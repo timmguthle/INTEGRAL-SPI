@@ -27,14 +27,16 @@ revolution = "0374"
 
 #data_path = f"./main_files/SPI_data/{revolution}"
 # data_path = "./main_files/SPI_data/1380"
-#data_path = f"./spiselect_SPI_Data/{revolution}"
-data_path = f"./afs_SPI_Data/{revolution}"
+spi_data_path = f"./spiselect_SPI_Data/{revolution}"
+afs_data_path = f"./afs_SPI_Data/{revolution}"
 
 # original K Wert: 6e-3, 40, -2
 
 
 ra, dec = 10, -40
-K, piv, index = 7e-4, 100, -2
+K = 7e-4
+index_pl = -2
+piv = 100
 # ra, dec = 155., 75.
 # K, piv, index = 3e-3, 40, -1
 
@@ -42,11 +44,11 @@ K, piv, index = 7e-4, 100, -2
 pl = Powerlaw()
 pl.piv = piv
 pl.K = K
-pl.index = index
+pl.index = index_pl
 component1 = SpectralComponent("pl", shape=pl)
 source = PointSource("Test", ra=ra, dec=dec, components=[component1])
 
-emod = np.geomspace(10, 3000, 50)
+emod = np.geomspace(18, 2000, 200)
 spec = source(emod)
 spec_binned = powerlaw_binned_spectrum(emod, spec)
 # spec_binned = (emod[1:]-emod[:-1])*(spec[:-1]+spec[1:])/2
@@ -117,15 +119,17 @@ def pyspi_real_bkg(
         destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_para2/0374',
         data_path='/home/tguethle/Documents/spi/Master_Thesis/afs_SPI_Data/0374',
         piv=100,
+        scale_background=None,
         ):
     #destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_para2/{revolution}"
-
+    print(f'creating data for {destination_path} with K={K}, piv={piv}, index={index_pl}')
     
     # Energy Bins
     with fits.open(f"{data_path}/energy_boundaries.fits") as file:
 
         t = Table.read(file[1])
         energy_bins = np.append(t["E_MIN"], t["E_MAX"][-1])
+        print(f'Number of energy bins: {len(energy_bins)-1}')
     # Pointings and Start Times
     with fits.open(f"{data_path}/pointing.fits") as file:
         t = Table.read(file[1])
@@ -190,6 +194,8 @@ def pyspi_real_bkg(
         counts = t
         
     updated_counts = counts.copy()
+    if scale_background is not None:
+        updated_counts["COUNTS"] = updated_counts['COUNTS'] // int(1/scale_background)
     updated_counts["COUNTS"] += source_counts
 
     hdu = fits.BinTableHDU(data=updated_counts, name="SPI.-OBS.-DSP")
@@ -200,8 +206,8 @@ def pyspi_real_bkg(
     os.popen(f"cp {data_path}/dead_time.fits {destination_path}/dead_time.fits")
 
 
-pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/0374',
-               data_path='/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374')
+pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2',
+               data_path=spi_data_path, scale_background=0.1)
 
 
 # Sim source data for spimodfit
