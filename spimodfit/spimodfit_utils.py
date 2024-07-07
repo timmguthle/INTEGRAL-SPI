@@ -187,7 +187,7 @@ class SpimselectDownloader():
             assert hdul[1].data.shape[0] == 19*nr_pointings, "wrong shape of evts_det_spec.fits process failed"
 
             hdul.writeto(f"{self.base_dir}dataset_{self.name}/spi/evts_det_spec.fits.gz", overwrite=overwrite)
-
+            print(f'{Fore.GREEN}adjusted files for spimodfit and copied to automated crab{Style.RESET_ALL}')
 
 
 class SpimodfitWrapper():
@@ -520,13 +520,32 @@ class SpimodfitWrapper():
             fig.savefig(f"{self.base_dir}{self.name}_figures/fig_{self.name}_{i}.png")
             print(f'{Fore.GREEN}skymap nr.{i} plotted and saved{Style.RESET_ALL}')
   
+def get_data_from_pyspi(name, rev, source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/"):
+    """
+    get the ready simulated data from the pyspi 
+    workflow. 
+    remember to authenticate and initialize the environment variables
+    """
+    downloader = SpimselectDownloader(name, rev, center=False, E_Bins=normal_E_Bins)
+    wrapper = SpimodfitWrapper(name, rev, source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
+    wrapper.generate_scripts()
+
+    downloader.generate_and_run()
+    downloader.adjust_for_spimodfit(source_path=source_path)
+
+    wrapper.run_background()
+    wrapper.run_spimodfit()
+    wrapper.run_adjust4threeML()
+
 
 
 if __name__ == '__main__':
-    gen = SpimodfitWrapper('skymap374-2', [374])
+    get_data_from_pyspi("374_reduced_counts_bright_source", [374], source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/")
+
+    #gen = SpimodfitWrapper('skymap374-2', [374])
     # gen.generate_scripts()
     # gen.runscripts()
-    gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation, sweep_search_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2")
+    #gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation, sweep_search_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2")
     #downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
     #downloader.generate_and_run()
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")

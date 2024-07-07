@@ -34,7 +34,7 @@ afs_data_path = f"./afs_SPI_Data/{revolution}"
 
 
 ra, dec = 10, -40
-K = 7e-4
+K = 7e-3
 index_pl = -2
 piv = 100
 # ra, dec = 155., 75.
@@ -206,7 +206,7 @@ def pyspi_real_bkg(
     os.popen(f"cp {data_path}/dead_time.fits {destination_path}/dead_time.fits")
 
 
-pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2',
+pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/0374',
                data_path=spi_data_path, scale_background=0.1)
 
 

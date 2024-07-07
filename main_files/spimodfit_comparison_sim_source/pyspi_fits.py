@@ -699,7 +699,7 @@ def pyspi_fit_0374_pre_ppc(
     multinest_fit = MultinestClusterFit(
         pointings,
         source_model,
-        (20, 600,),
+        (20, 400,),
         np.geomspace(18, 2000, 200),
         no_rebinning,
         #log_binning_function_for_x_number_of_bins(70),
@@ -722,11 +722,12 @@ def pyspi_fit_0374_pre_ppc(
 
 if __name__ == '__main__':
     pyspi_fit_0374_pre_ppc(
-        data_path="./main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2",
-        fit_path_extension="pre_ppc", 
+        data_path="./main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/0374",
+        fit_path_extension="pre_ppc_20-400", 
         new_pointings=True, 
         piv=100
     )
+
 #pyspi_smf_bkg_fit_0374_pre_ppc()
 # pyspi_const_bkg_fit_0374_pre_ppc()
 #pyspi_real_bkg_fit_0374_pre_ppc()

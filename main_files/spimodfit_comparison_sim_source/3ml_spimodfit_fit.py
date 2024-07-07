@@ -1,0 +1,172 @@
+from threeML import *
+from threeML.plugins.OGIPLike import OGIPLike
+import matplotlib.pyplot as plt
+import numpy as np
+import pickle
+from threeML.minimizer.minimization import FitFailed
+import sys, os
+
+sys.path.insert(0, os.path.abspath('./main_files'))
+
+# possible datasets
+reduced_counts_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
+reduced_counts_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2/all', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
+
+reduced_counts_bright_source = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source', 'fit_Crab_374_reduced_counts_bright_source', [7e-3, -2]]
+
+bright_source_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_very_bright/0374/spimodfit', 'fit_Crab_374_very_bright', [7e-2, -2]]
+
+real_bkg_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
+real_bkg_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2/all', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
+
+
+# only modify this line to change the dataset
+dataset = reduced_counts_bright_source
+
+# define the paths
+data_path = f'/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/{dataset[1]}'
+fit_path = dataset[0]
+
+def save_fit(val, cov):
+    with open(f"{fit_path}/source_parameters.pickle", "wb") as f:
+        pickle.dump((val, cov),f)
+
+def mahalanobis_dist(vals, cov, real_vals):
+    dif = (vals - real_vals)
+    return np.sqrt(np.linalg.multi_dot([dif, np.linalg.inv(cov), dif]))
+
+def select_good_channels(data_path, max_chi2=1.1, min_chi2=0.0):
+    """
+    only chooes channels with a good fit. The goodnes is characterized by the chi2 value. 
+    """
+    chi2_list = []
+    with open(f'{data_path}/spimodfit.log') as f:
+        lines = f.readlines()
+        for line in lines:
+            if "Corresponding Pearson's chi2 stat / dof" in line:
+                chi2 = float(line.split()[-3][:-4])
+                chi2_list.append(chi2)
+    chi2_list = np.array(chi2_list)
+    print(chi2_list)
+    max_good_channels = chi2_list < max_chi2
+    min_good_channels = chi2_list > min_chi2
+    good_channels = max_good_channels & min_good_channels
+    channels = []
+    for i, good in enumerate(good_channels):
+        if good:
+            channels.append(f'c{i+1}')
+    return channels
+
+def generate_channel_options(nr_channles=41, min_size=6):
+    """
+    generate options with which the fit can be performed. 
+    only gives options where a certain number of low/high energys are cut of.
+    """
+    out = []
+    out2 = []
+    for i in range(nr_channles):
+        for j in range(i+min_size, nr_channles):
+            out2.append([f'c{i+1}-c{j+1}'])
+            out.append([f'c{n}' for n in range(i+1, j+2)])
+
+    return out
+
+def run_fit(channels: list[str], save_figure=False):
+    """
+    run the fit with the given channels and channel option. 
+    """
+    s_1A = OGIPLike("sim_source", observation=f'{data_path}/spectra_sim_sourc.fits', response=f'{data_path}/spectral_response.rmf.fits')
+    s_1A.set_active_measurements(*channels)
+
+    spec = Powerlaw()
+
+    ps = PointSource('crab',l=0,b=0,spectral_shape=spec)
+
+    ps_model = Model(ps)
+
+    ps_model.crab.spectrum.main.Powerlaw.piv = 100
+
+    ps_data = DataList(s_1A)
+
+    ps_jl = JointLikelihood(ps_model, ps_data)
+
+    best_fit_parameters_ps, likelihood_values_ps = ps_jl.fit()
+
+    
+
+    ps_jl.restore_best_fit()
+
+    val = np.array(best_fit_parameters_ps["value"])
+    err = np.array(best_fit_parameters_ps["error"])
+    cor = ps_jl.correlation_matrix
+    cov = cor * err[:, np.newaxis] * err[np.newaxis, :]
+    logL = float(likelihood_values_ps.values[1])
+
+    if save_figure:
+        fig = display_spectrum_model_counts(ps_jl, min_rate=0.1, step=True)
+        fig.savefig(f'{fit_path}/sim_spource.pdf')
+
+    print(mahalanobis_dist(val, cov, dataset[2]))
+
+    return val, cov, err, logL
+
+def run_multiple_fits(metric='m_distance', remove_bad_channels=True, max_chi2=1.2, min_chi2=0.0):
+    assert metric in ['m_distance', 'logL'], 'metric not implemented'
+    channels = generate_channel_options(41)
+    good_channels = select_good_channels(data_path, max_chi2=max_chi2, min_chi2=min_chi2)
+    real_vals = dataset[2]
+
+    if remove_bad_channels:
+        for i,co in enumerate(channels):
+            for c in co.copy():
+                if c not in good_channels:
+                    co.remove(c)
+            channels[i] = tuple(co)
+        # remove duplicates
+        channels = list(set(channels))
+
+    with open(f'{fit_path}/fit_results.txt', 'w') as f:
+        f.write('fit summary\n')
+        f.write(f'total nr of combinations: {len(channels)}, metric: {metric}\n')
+
+    best_metric_value = 100000
+    for channel in channels:
+        if len(channel) == 0:
+            continue
+        try:
+            val, cov, err, logL = run_fit(channel)
+        except FitFailed:
+            continue
+
+        dist = mahalanobis_dist(val, cov, real_vals)
+
+        if metric == 'm_distance':
+            metric_value = dist
+        elif metric == 'logL':
+            metric_value = logL
+
+        with open(f'{fit_path}/fit_results.txt', 'a') as f:
+            f.write(f'distance: {dist:.3f}, -LogL: {logL:.3f}, channels: {channel}, values: {val}, err: {err}\n')
+
+        if metric_value < best_metric_value and err[0] < 0.5e-3 and err[1] < 0.05:
+            best_metric_value = metric_value
+            best_channel = channel
+            save_fit(val, cov)
+
+    with open(f'{fit_path}/fit_results.txt', 'a') as f:
+        f.write(f'best fit: {best_channel}, {metric}: {best_metric_value}\n')
+
+
+
+if __name__ == '__main__':
+    #run_multiple_fits(remove_bad_channels=False, max_chi2=1.3)
+    c = ['c21', 'c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c40', 'c41']
+    c.remove('c21')
+    c_for_reduced = ['c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c39', 'c40', 'c41']
+    c_reduced_bright = ['c20', 'c21', 'c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c39', 'c40', 'c41']
+    #good_channles = select_good_channels(data_path, max_chi2=1.3)
+    val, cov, err, logL = run_fit(c_reduced_bright)
+    save_fit(val, cov)
+    #
+
+
