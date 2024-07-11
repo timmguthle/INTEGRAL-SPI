@@ -227,8 +227,10 @@ def gen_and_fit(config_args: dict):
 
 config = [
     {
+        'name': 'bright_100',
         "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100/0374',
         "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374',
+        'rev': [374],
         "piv": 100,
         "scale_background": None,
         "K": 7e-2,
@@ -237,8 +239,10 @@ config = [
         "Energy_range": (20, 600)
     },
     {
+        'name': 'bright_10',
         "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10/0374',
         "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374',
+        'rev': [374],
         "piv": 100,
         "scale_background": None,
         "K": 7e-3,
@@ -247,8 +251,10 @@ config = [
         "Energy_range": (20, 600)
     },
     {
+        'name': 'bright_100_reduced_bkg_10',
         "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_reduced_bkg_10/0374',
         "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374',
+        'rev': [374],
         "piv": 100,
         "scale_background": 0.1,
         "K": 7e-2,
@@ -257,8 +263,10 @@ config = [
         "Energy_range": (20, 600)
     },
     {
+        'name': 'bright_10_reduced_bkg_10',
         "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_reduced_bkg_10/0374',
         "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374',
+        'rev': [374],
         "piv": 100,
         "scale_background": 0.1,
         "K": 7e-3,

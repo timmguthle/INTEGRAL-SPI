@@ -9,7 +9,6 @@ import sys, os
 sys.path.insert(0, os.path.abspath('./main_files'))
 
 
-
 def save_fit(val, cov, fit_path):
     with open(f"{fit_path}/source_parameters.pickle", "wb") as f:
         pickle.dump((val, cov),f)
@@ -68,6 +67,9 @@ def run_fit(channels: list[str],
     """
     run the fit with the given channels and channel option. 
     """
+    fit_path = dataset[0]
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
     data_path = f'/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/{dataset[1]}'
     s_1A = OGIPLike("sim_source", observation=f'{data_path}/spectra_sim_sourc.fits', response=f'{data_path}/spectral_response.rmf.fits')
     s_1A.set_active_measurements(*channels)
@@ -126,7 +128,7 @@ def test_goodness_of_fit(joint_likelihood: JointLikelihood):
     print(gof)
 
 
-def run_fit_bayes(channels: list[str], save_figure=False, source_name='sim_sourc'):
+def run_fit_bayes(channels: list[str], source_name='sim_sourc'):
     """
     run the fit with the given channels and channel option. 
     """
@@ -157,15 +159,11 @@ def run_fit_bayes(channels: list[str], save_figure=False, source_name='sim_sourc
     err = np.sqrt(np.diag(cov))
     logL = bayes.results.get_statistic_frame()
 
-    if save_figure:
-        fig = display_spectrum_model_counts(ps_jl, step=True)
-        fig.savefig(f'{fit_path}/sim_spource.pdf')
-
     print(mahalanobis_dist(val, cov, dataset[2]))
 
     return val, cov, err, logL
 
-def run_multiple_fits(metric='m_distance', remove_bad_channels=True, max_chi2=1.2, min_chi2=0.0):
+def run_multiple_fits(dataset, metric='m_distance', remove_bad_channels=True, max_chi2=1.2, min_chi2=0.0):
     assert metric in ['m_distance', 'logL'], 'metric not implemented'
     channels = generate_channel_options(41)
     good_channels = select_good_channels(data_path, max_chi2=max_chi2, min_chi2=min_chi2)
@@ -189,7 +187,7 @@ def run_multiple_fits(metric='m_distance', remove_bad_channels=True, max_chi2=1.
         if len(channel) == 0:
             continue
         try:
-            val, cov, err, logL = run_fit(channel)
+            val, cov, err, logL = run_fit(channel, dataset)
         except FitFailed:
             continue
 
@@ -206,7 +204,7 @@ def run_multiple_fits(metric='m_distance', remove_bad_channels=True, max_chi2=1.
         if metric_value < best_metric_value and err[0] < 0.5e-3 and err[1] < 0.05:
             best_metric_value = metric_value
             best_channel = channel
-            save_fit(val, cov)
+            save_fit(val, cov, dataset[0])
 
     with open(f'{fit_path}/fit_results.txt', 'a') as f:
         f.write(f'best fit: {best_channel}, {metric}: {best_metric_value}\n')

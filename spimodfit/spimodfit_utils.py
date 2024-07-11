@@ -181,7 +181,7 @@ class SpimselectDownloader():
         subprocess.run(f"rm {self.base_dir}dataset_{self.name}/spi/evts_det_spec.fits.gz", shell=True)
         
         # dead_times, pointings and energy_boundaries are the same so already exist. only the evts_det_spec.fits file needs to be replaced
-        with fits.open(f"{source_path}{self.revolutions[0]:04}/evts_det_spec.fits") as hdul:
+        with fits.open(f"{source_path}/evts_det_spec.fits") as hdul:
 
             t = Table.read(hdul[1])
             nr_pointings = len(t) // 85
@@ -526,11 +526,12 @@ class SpimodfitWrapper():
             fig.savefig(f"{self.base_dir}{self.name}_figures/fig_{self.name}_{i}.png")
             print(f'{Fore.GREEN}skymap nr.{i} plotted and saved{Style.RESET_ALL}')
   
-def get_data_from_pyspi(name,
+def fit_with_data_from_pyspi(name,
                         rev, 
-                        source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/", 
+                        data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/0374", 
                         E_Bins=normal_E_Bins,
-                        center=False
+                        center=False, 
+                        **kwargs
                     ):
     """
     get the ready simulated data from the pyspi 
@@ -539,13 +540,13 @@ def get_data_from_pyspi(name,
     """
     downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
     wrapper = SpimodfitWrapper(name, rev, source="cat_sim_source", source_name="sim_sourc", E_Bins=E_Bins)
-    #wrapper.generate_scripts()
+    wrapper.generate_scripts()
 
-    #downloader.generate_and_run()
-    #downloader.adjust_for_spimodfit(source_path=source_path)
+    downloader.generate_and_run()
+    downloader.adjust_for_spimodfit(source_path=data_path)
 
-    #wrapper.run_background()
-    #wrapper.run_spimodfit()
+    wrapper.run_background()
+    wrapper.run_spimodfit()
     wrapper.run_adjust4threeML()
 
 def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins):
