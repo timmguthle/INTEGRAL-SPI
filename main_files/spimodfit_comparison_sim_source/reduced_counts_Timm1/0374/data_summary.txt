@@ -1,0 +1,6 @@
+K: 0.0007
+piv: 100
+index: -2
+Scale Background: 0.1
+Data Path: ./afs_SPI_Data/0374
+Destination Path: /home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm1/0374

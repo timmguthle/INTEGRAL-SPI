@@ -302,7 +302,7 @@ def extract_pointing_info(path, p_id):
         for i in range(num_dets):
             for j in index:
                 counts[i, : ] += t["COUNTS"][j[0]*85 + i]
-
+    # counts in format (det, energy_bin)
     return time_start, time_elapsed, energy_bins, counts
 
 def generate_resp_mat(
@@ -653,6 +653,8 @@ class MultinestClusterFit:
             c_time_start, c_time_elapsed = [], []
             for p_i, pointing in enumerate(combination):
                 time_start, time_elapsed, energy_bins, counts_f = extract_pointing_info(pointing[1], pointing[0])
+                # pointing[0] is the pointing id, pointing[1] is the path to the pointing
+                # counts_f in format (det, energy_bin)
                 c_time_start.append(time_start)
                 dets_temp = get_live_dets(time=time_start, event_types=["single"])
                 c_time_elapsed.append(time_elapsed[dets_temp])

@@ -17,6 +17,8 @@ from astropy.coordinates import SkyCoord
 
 normal_E_Bins = [20.0, 21.5, 23.5, 25.5, 27.5, 30.0, 32.5, 35.5, 38.5, 42.0, 45.5, 49.5, 54.0, 58.5, 63.5, 69.0, 75.0, 81.5, 89.0, 96.5, 105.0, 114.0, 124.0, 134.5, 146.0, 159.0, 172.5, 187.5, 204.0, 221.5, 240.5, 261.5, 284.0, 308.5, 335.5, 364.5, 396.0, 430.0, 467.5, 508.0, 514, 600]
 wide_E_Bins = [20, 29, 43, 62, 91, 132, 193, 282, 411, 600]
+energies = np.geomspace(40, 1200, 101, dtype=np.uint64) / 2
+E_bins_100 = list(energies)
 center_simulation = '312deg -76deg' # entspricht -48deg -
 
 
@@ -38,6 +40,7 @@ class SpimselectDownloader():
     name: str, name of the dataset
     revolutions: list, list of revolutions to be included in the dataset
     E_Bins: list, list of energy bins to be used in the analysis. default is wide_E_Bins
+        (Note: cant handle to small energy bins. If given spiselect will create best possible. But different form the given.)
     center: str or tuple or False, center of the data selection. Either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates.
     """
     def __init__(self, name: str, revolutions: list[int], E_Bins=wide_E_Bins, center=False) -> None:
@@ -49,7 +52,7 @@ class SpimselectDownloader():
         self.center = center
         self.E_Bins = E_Bins
         self.Bins = [f"{E_Bins[i]}-{E_Bins[i+1]}" for i in range(len(E_Bins)- 1)]
-        self.Bins_diff = [f"{E_Bins[i+1]-E_Bins[i]}" for i in range(len(E_Bins) - 1)]
+        self.Bins_diff = [f"{(E_Bins[i+1]-E_Bins[i]):.2f}" for i in range(len(E_Bins) - 1)]
         self.nr_E_bins = len(E_Bins) - 1
 
         assert center == 'crab' or center == False or len(center) == 2, "center must be either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates."
@@ -117,6 +120,8 @@ class SpimselectDownloader():
             hdul.writeto("spi2/pointing.fits")
 
         with fits.open("spi/energy_boundaries.fits.gz") as hdul:
+            # update e bins
+
             hdul.writeto("spi2/energy_boundaries.fits")
 
 
@@ -149,11 +154,11 @@ class SpimselectDownloader():
         print(f'{Fore.GREEN}adjusted files for pyspi{Style.RESET_ALL}')
 
 
-    def copy_to_pyspi(self, path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/"):
+    def copy_to_pyspi(self, path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/", extension=''):
         """
         copy the dataset to the pyspi directory
         """
-        compleate_path = f'{path}{self.revolutions[0]:04}/'
+        compleate_path = f'{path}{self.revolutions[0]:04}{extension}/'
         if not os.path.exists(compleate_path):
             os.mkdir(compleate_path)
         if len(self.revolutions) > 1:
@@ -363,6 +368,7 @@ class SpimodfitWrapper():
         self.run_spiselect()
         self.run_background()
         self.run_spimodfit()
+        self.run_adjust4threeML()
 
 
     def run_spiselect(self):
@@ -520,28 +526,45 @@ class SpimodfitWrapper():
             fig.savefig(f"{self.base_dir}{self.name}_figures/fig_{self.name}_{i}.png")
             print(f'{Fore.GREEN}skymap nr.{i} plotted and saved{Style.RESET_ALL}')
   
-def get_data_from_pyspi(name, rev, source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/"):
+def get_data_from_pyspi(name,
+                        rev, 
+                        source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/", 
+                        E_Bins=normal_E_Bins,
+                        center=False
+                    ):
     """
     get the ready simulated data from the pyspi 
     workflow. 
     remember to authenticate and initialize the environment variables
     """
-    downloader = SpimselectDownloader(name, rev, center=False, E_Bins=normal_E_Bins)
-    wrapper = SpimodfitWrapper(name, rev, source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
-    wrapper.generate_scripts()
+    downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
+    wrapper = SpimodfitWrapper(name, rev, source="cat_sim_source", source_name="sim_sourc", E_Bins=E_Bins)
+    #wrapper.generate_scripts()
 
-    downloader.generate_and_run()
-    downloader.adjust_for_spimodfit(source_path=source_path)
+    #downloader.generate_and_run()
+    #downloader.adjust_for_spimodfit(source_path=source_path)
 
-    wrapper.run_background()
-    wrapper.run_spimodfit()
+    #wrapper.run_background()
+    #wrapper.run_spimodfit()
     wrapper.run_adjust4threeML()
 
+def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins):
+    downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
+    downloader.generate_and_run()
+    downloader.adjust_for_pyspi()
+    downloader.copy_to_pyspi(extension='_100_bins')
 
 
 if __name__ == '__main__':
-    get_data_from_pyspi("374_reduced_counts_bright_source", [374], source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/")
+    #get_data_from_pyspi(
+    #    "374_100_bins_source", 
+    #    [374], 
+    #    source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_100_bins/",
+    #    E_Bins=E_bins_100,
+    #    center=[-48, -76]
+    #)
 
+    #download_and_copy_to_pyspi("374_100_bins", [374], center=[-48, -76], E_Bins=E_bins_100)
     #gen = SpimodfitWrapper('skymap374-2', [374])
     # gen.generate_scripts()
     # gen.runscripts()
@@ -551,14 +574,11 @@ if __name__ == '__main__':
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/")
     
-    #wrapper = SpimodfitWrapper('374_real_bkg_para2', [374], source="cat_sim_source", source_name="sim_sourc", E_Bins=normal_E_Bins)
-    #wrapper.generate_scripts()
+    wrapper = SpimodfitWrapper('43_44_45_crab', [43, 44, 45], source="cat_crab", source_name="crab", E_Bins=normal_E_Bins)
+    wrapper.generate_scripts()
 
-
-    #wrapper.run_background()
-    #wrapper.run_spimodfit()
-    #wrapper.run_adjust4threeML()
-    # #
+    #wrapper.runscripts()
+    wrapper.run_adjust4threeML()
     
     #wrapper.plot_skymap_aitoff(radius='30deg', center=center_simulation, center_skymap=center_simulation)
 

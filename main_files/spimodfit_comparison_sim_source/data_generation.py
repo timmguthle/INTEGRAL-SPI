@@ -34,7 +34,7 @@ afs_data_path = f"./afs_SPI_Data/{revolution}"
 
 
 ra, dec = 10, -40
-K = 7e-3
+K = 7e-4
 index_pl = -2
 piv = 100
 # ra, dec = 155., 75.
@@ -122,7 +122,7 @@ def pyspi_real_bkg(
         scale_background=None,
         ):
     #destination_path = f"./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_para2/{revolution}"
-    print(f'creating data for {destination_path} with K={K}, piv={piv}, index={index_pl}')
+    print(f'creating data for {destination_path} with K={K}, piv={piv}, index={index_pl}, background scale={scale_background}')
     
     # Energy Bins
     with fits.open(f"{data_path}/energy_boundaries.fits") as file:
@@ -205,8 +205,16 @@ def pyspi_real_bkg(
     os.popen(f"cp {data_path}/pointing.fits {destination_path}/pointing.fits")
     os.popen(f"cp {data_path}/dead_time.fits {destination_path}/dead_time.fits")
 
+    with open(f"{destination_path}/data_summary.txt", "w") as f:
+        f.write(f"K: {K}\n")
+        f.write(f"piv: {piv}\n")
+        f.write(f"index: {index_pl}\n")
+        f.write(f"Scale Background: {scale_background}\n")
+        f.write(f"Data Path: {data_path}\n")
+        f.write(f"Destination Path: {destination_path}\n")
+        
 
-pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/0374',
+pyspi_real_bkg(destination_path='/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2/0374',
                data_path=spi_data_path, scale_background=0.1)
 
 

@@ -16,7 +16,7 @@ import pickle
 #rsp_bases = tuple([ResponseDataRMF.from_version(i) for i in range(5)])
 
 def save_clusters(pointings, folder):
-    if not os.path.exists(f"./{folder}"):
+    if not os.path.exists(f"./{folder}") and not os.path.exists(folder): # I hope this doesnt break anything
         os.mkdir(folder)
     with open(f"{folder}/pointings.pickle", "wb") as f:
         pickle.dump(pointings, f)

@@ -8,26 +8,9 @@ import sys, os
 
 sys.path.insert(0, os.path.abspath('./main_files'))
 
-# possible datasets
-reduced_counts_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
-reduced_counts_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2/all', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
-
-reduced_counts_bright_source = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source', 'fit_Crab_374_reduced_counts_bright_source', [7e-3, -2]]
-
-bright_source_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_very_bright/0374/spimodfit', 'fit_Crab_374_very_bright', [7e-2, -2]]
-
-real_bkg_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
-real_bkg_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2/all', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
 
 
-# only modify this line to change the dataset
-dataset = reduced_counts_bright_source
-
-# define the paths
-data_path = f'/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/{dataset[1]}'
-fit_path = dataset[0]
-
-def save_fit(val, cov):
+def save_fit(val, cov, fit_path):
     with open(f"{fit_path}/source_parameters.pickle", "wb") as f:
         pickle.dump((val, cov),f)
 
@@ -40,13 +23,18 @@ def select_good_channels(data_path, max_chi2=1.1, min_chi2=0.0):
     only chooes channels with a good fit. The goodnes is characterized by the chi2 value. 
     """
     chi2_list = []
+    mod_chi2_list = []
     with open(f'{data_path}/spimodfit.log') as f:
         lines = f.readlines()
         for line in lines:
             if "Corresponding Pearson's chi2 stat / dof" in line:
                 chi2 = float(line.split()[-3][:-4])
                 chi2_list.append(chi2)
-    chi2_list = np.array(chi2_list)
+            if "Reduced mod Chi square at opt" in line:
+                mod_chi2 = float(line.split()[-1])
+                mod_chi2_list.append(mod_chi2)
+
+    chi2_list = np.array(mod_chi2_list)
     print(chi2_list)
     max_good_channels = chi2_list < max_chi2
     min_good_channels = chi2_list > min_chi2
@@ -71,10 +59,16 @@ def generate_channel_options(nr_channles=41, min_size=6):
 
     return out
 
-def run_fit(channels: list[str], save_figure=False):
+def run_fit(channels: list[str],
+            dataset, 
+            save_figure=False, 
+            test_goodness=False, 
+            retrun_objects=False
+    ):
     """
     run the fit with the given channels and channel option. 
     """
+    data_path = f'/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/{dataset[1]}'
     s_1A = OGIPLike("sim_source", observation=f'{data_path}/spectra_sim_sourc.fits', response=f'{data_path}/spectral_response.rmf.fits')
     s_1A.set_active_measurements(*channels)
 
@@ -103,7 +97,68 @@ def run_fit(channels: list[str], save_figure=False):
     logL = float(likelihood_values_ps.values[1])
 
     if save_figure:
-        fig = display_spectrum_model_counts(ps_jl, min_rate=0.1, step=True)
+        fig = display_spectrum_model_counts(ps_jl, step=True)
+        fig.savefig(f'{fit_path}/sim_spource.pdf')
+
+    print(mahalanobis_dist(val, cov, dataset[2]))
+
+    if test_goodness:
+        test_goodness_of_fit(ps_jl)
+
+    if retrun_objects:
+        return s_1A, ps_jl
+
+    return val, cov, err, logL
+
+
+def test_goodness_of_fit(joint_likelihood: JointLikelihood):
+    """
+    test the goodness of fit with the threeML build in function. 
+
+
+    Ich glaube die Idee ist folgende: Wenn man mit vielen monte carlo Datensätzen simuliert und für fast alle eine 
+    höhere -logL als bei dem tatsächlichen fit raukommt, kann man davon ausgehen, dass der fit gut ist.
+    """
+    gof_obj = GoodnessOfFit(joint_likelihood)
+    gof, data_frame, like_data_frame = gof_obj.by_mc(
+        n_iterations=300, continue_on_failure=True
+    )
+    print(gof)
+
+
+def run_fit_bayes(channels: list[str], save_figure=False, source_name='sim_sourc'):
+    """
+    run the fit with the given channels and channel option. 
+    """
+    s_1A = OGIPLike("sim_source", observation=f'{data_path}/spectra_{source_name}.fits', response=f'{data_path}/spectral_response.rmf.fits')
+    s_1A.set_active_measurements(*channels)
+
+    spec = Powerlaw()
+
+    ps = PointSource('crab',l=0,b=0,spectral_shape=spec)
+
+    ps_model = Model(ps)
+
+    ps_model.crab.spectrum.main.Powerlaw.piv = 100
+    ps_model.crab.spectrum.main.Powerlaw.K.prior = Log_uniform_prior(lower_bound=1e-12, upper_bound=1e0)
+    ps_model.crab.spectrum.main.Powerlaw.index.prior = Uniform_prior(lower_bound=-5, upper_bound=0)
+
+    ps_data = DataList(s_1A)
+
+    bayes = BayesianAnalysis(ps_model, ps_data)
+    bayes.set_sampler("multinest")
+    bayes.sampler.setup(n_live_points=800, resume=False, verbose=True, auto_clean=True)
+    bayes.sample()
+
+    val = bayes.results._values
+
+
+    cov = bayes.results.estimate_covariance_matrix()
+    err = np.sqrt(np.diag(cov))
+    logL = bayes.results.get_statistic_frame()
+
+    if save_figure:
+        fig = display_spectrum_model_counts(ps_jl, step=True)
         fig.savefig(f'{fit_path}/sim_spource.pdf')
 
     print(mahalanobis_dist(val, cov, dataset[2]))
@@ -156,17 +211,40 @@ def run_multiple_fits(metric='m_distance', remove_bad_channels=True, max_chi2=1.
     with open(f'{fit_path}/fit_results.txt', 'a') as f:
         f.write(f'best fit: {best_channel}, {metric}: {best_metric_value}\n')
 
+# possible datasets
+reduced_counts_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
+reduced_counts_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2/all', 'fit_Crab_374_reduced_bkg', [7e-4, -2]]
+
+reduced_counts_bright_source = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/bayes', 'fit_Crab_374_reduced_counts_bright_source', [7e-3, -2]]
+
+bright_source_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_very_bright/0374/spimodfit', 'fit_Crab_374_very_bright', [7e-2, -2]]
+
+real_bkg_Timm2 = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
+real_bkg_Timm2_all = ['/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/spimodfit_fits/0374_real_bkg_Timm2_para2/all', 'fit_Crab_374_real_bkg_para2', [7e-4, -2]]
+
+real_bkg_100_bins = ["/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_100_bins/0374", "fit_Crab_374_100_bins_source", [7e-3, -2]]
+
 
 
 if __name__ == '__main__':
-    #run_multiple_fits(remove_bad_channels=False, max_chi2=1.3)
     c = ['c21', 'c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c40', 'c41']
-    c.remove('c21')
+    #.remove('c21')
     c_for_reduced = ['c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c39', 'c40', 'c41']
     c_reduced_bright = ['c20', 'c21', 'c22', 'c23', 'c24', 'c25', 'c26', 'c27', 'c28', 'c29', 'c30', 'c31', 'c32', 'c33', 'c34', 'c35', 'c36', 'c37', 'c38', 'c39', 'c40', 'c41']
-    #good_channles = select_good_channels(data_path, max_chi2=1.3)
-    val, cov, err, logL = run_fit(c_reduced_bright)
-    save_fit(val, cov)
-    #
 
+    # only modify this line to change the dataset
+    dataset = real_bkg_Timm2
+
+    # define the paths
+    data_path = f'/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/{dataset[1]}'
+    fit_path = dataset[0]
+    
+    good_channles = select_good_channels(data_path, max_chi2=1.2)
+    val, cov, err, logL = run_fit(good_channles, dataset, test_goodness=False)
+    save_fit(val, cov, fit_path)
+    #logL = -float(np.array(logL)[0]) # only for bayesian fit
+    nr_channles = len(good_channles)
+    print(f"- log(L) at minimum: {logL}")
+    reduced_chi2 = 2 * logL / (nr_channles- 2)
+    print(f"reduced chi2: {reduced_chi2}")
 

@@ -660,7 +660,8 @@ def pyspi_real_bkg_fit_0374_far_ind():
 def pyspi_fit_0374_pre_ppc(
         data_path="./main_files/spimodfit_comparison_sim_source/pyspi_const_bkg/0374",
         fit_path_extension="pre_ppc", 
-        new_pointings=True, 
+        new_pointings=True,
+        Energy_range=(18, 600),
         piv=100):
     
     rev = "0374"
@@ -699,7 +700,7 @@ def pyspi_fit_0374_pre_ppc(
     multinest_fit = MultinestClusterFit(
         pointings,
         source_model,
-        (20, 400,),
+        Energy_range,
         np.geomspace(18, 2000, 200),
         no_rebinning,
         #log_binning_function_for_x_number_of_bins(70),
@@ -714,17 +715,26 @@ def pyspi_fit_0374_pre_ppc(
     
     p = ["Simulated Source 0374 K", "Simulated Source 0374 index"]
     val = np.array([i[1] for i in multinest_fit._cc.analysis.get_summary(parameters=p).values()])
+    err = np.array([i[1] for i in multinest_fit._cc.analysis.get_summary(parameters=p).errors()])
     cov = multinest_fit._cc.analysis.get_covariance(parameters=p)[1]
 
     with open(f"{fit_path}/source_parameters.pickle", "wb") as f:
         pickle.dump((val, cov), f)
 
+    with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
+        f.write(f"Energy range: {Energy_range}\n")
+        f.write(f"Data path: {data_path}\n")
+        f.write(f"Fit path: {fit_path}\n")
+        f.write(f"Result: {val}, Errors {err}\n")
+        f.write(f"Covariance: {cov}\n")
+
 
 if __name__ == '__main__':
     pyspi_fit_0374_pre_ppc(
-        data_path="./main_files/spimodfit_comparison_sim_source/reduced_counts_bright_source/0374",
-        fit_path_extension="pre_ppc_20-400", 
-        new_pointings=True, 
+        data_path="./main_files/spimodfit_comparison_sim_source/reduced_counts_Timm2/0374",
+        fit_path_extension="pre_ppc_Test", 
+        new_pointings=True,
+        Energy_range=(20,600),
         piv=100
     )
 

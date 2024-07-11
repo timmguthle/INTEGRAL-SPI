@@ -1,0 +1,6 @@
+Energy range: (30, 81.5)
+Data path: ./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_100_bins/0374
+Fit path: ./main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_100_bins/0374/pre_ppc_only_low_energy
+Result: [ 6.15078798e-04 -2.04325190e+00]
+Covariance: [[5.26291434e-11 9.36152404e-08]
+ [9.36152404e-08 1.96471056e-04]]
