@@ -538,6 +538,7 @@ def fit_with_data_from_pyspi(name,
     workflow. 
     remember to authenticate and initialize the environment variables
     """
+    print(center)
     downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
     wrapper = SpimodfitWrapper(name, rev, source="cat_sim_source", source_name="sim_sourc", E_Bins=E_Bins)
     wrapper.generate_scripts()
@@ -549,14 +550,15 @@ def fit_with_data_from_pyspi(name,
     wrapper.run_spimodfit()
     wrapper.run_adjust4threeML()
 
-def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins):
+def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins, extension=''):
     downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
     downloader.generate_and_run()
     downloader.adjust_for_pyspi()
-    downloader.copy_to_pyspi(extension='_100_bins')
+    downloader.copy_to_pyspi(extension=extension)
 
 
 if __name__ == '__main__':
+    pass
     #get_data_from_pyspi(
     #    "374_100_bins_source", 
     #    [374], 
@@ -565,7 +567,7 @@ if __name__ == '__main__':
     #    center=[-48, -76]
     #)
 
-    #download_and_copy_to_pyspi("374_100_bins", [374], center=[-48, -76], E_Bins=E_bins_100)
+    #download_and_copy_to_pyspi("374_center", [374], center=[-48, -76], E_Bins=normal_E_Bins, extension='_center')
     #gen = SpimodfitWrapper('skymap374-2', [374])
     # gen.generate_scripts()
     # gen.runscripts()
@@ -575,11 +577,11 @@ if __name__ == '__main__':
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_const_bkg_Timm2/")
     
-    wrapper = SpimodfitWrapper('43_44_45_crab', [43, 44, 45], source="cat_crab", source_name="crab", E_Bins=normal_E_Bins)
-    wrapper.generate_scripts()
+    # wrapper = SpimodfitWrapper('43_44_45_crab', [43, 44, 45], source="cat_crab", source_name="crab", E_Bins=normal_E_Bins)
+    # wrapper.generate_scripts()
 
     #wrapper.runscripts()
-    wrapper.run_adjust4threeML()
+    #wrapper.run_adjust4threeML()
     
     #wrapper.plot_skymap_aitoff(radius='30deg', center=center_simulation, center_skymap=center_simulation)
 

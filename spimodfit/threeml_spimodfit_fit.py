@@ -101,6 +101,7 @@ def run_fit(channels: list[str],
     if save_figure:
         fig = display_spectrum_model_counts(ps_jl, step=True)
         fig.savefig(f'{fit_path}/sim_spource.pdf')
+        print(f'fit saved at {fit_path}/sim_spource.pdf')
 
     print(mahalanobis_dist(val, cov, dataset[2]))
 

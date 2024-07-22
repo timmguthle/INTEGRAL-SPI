@@ -22,8 +22,8 @@ from datetime import datetime
 
 revolution = "0374"
 
-spi_data_path = f"./spiselect_SPI_Data/{revolution}"
-afs_data_path = f"./afs_SPI_Data/{revolution}"
+#spi_data_path = f"./spiselect_SPI_Data/{revolution}"
+#afs_data_path = f"./afs_SPI_Data/{revolution}"
 
 
 def pyspi_real_bkg(
@@ -224,8 +224,7 @@ def gen_and_fit(config_args: dict):
 
 
 # defines configs
-
-config = [
+old_config = [
     {
         'name': 'bright_100',
         "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100/0374',
@@ -274,11 +273,92 @@ config = [
         "new_pointings": True,
         "Energy_range": (20, 600)
     },
+]
+
+config = [
+    {
+        'name': 'bright_100_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_100_reduced_bkg_10_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_reduced_bkg_10_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_reduced_bkg_10_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_reduced_bkg_10_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_reduced_bkg_10_new',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_reduced_bkg_10_new/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
 
 ]
 
 
 if __name__ == "__main__":
     for i,c in enumerate(config):
-        if i in (2,3):
+        if i in (4,5):
             gen_and_fit(c)

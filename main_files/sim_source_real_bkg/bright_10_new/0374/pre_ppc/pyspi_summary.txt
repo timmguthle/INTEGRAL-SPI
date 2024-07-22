@@ -1,0 +1,7 @@
+Energy range: (20, 600)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_new/0374
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_new/0374/pre_ppc
+Result: [ 0.00700191 -2.00063845]
+Covariance: [[4.53256802e-11 5.64264492e-09]
+ [5.64264492e-09 1.13545310e-06]]
+compleated at 2024-07-12 14:13:41.428874
