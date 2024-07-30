@@ -113,7 +113,7 @@ def pyspi_real_bkg(
         
         for d_i, d in enumerate(dets):
             index = p_i * 85 + d
-            source_counts[index,:] = np.random.poisson(count_rates[d_i,:] * time_elapsed[index])    
+            source_counts[index,:] = np.random.poisson(count_rates[d_i,:] * time_elapsed[index])
 
     # Save Data for PySpi
 
@@ -357,8 +357,92 @@ config = [
 
 ]
 
+config_small_bins = [
+    {
+        'name': 'bright_100_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_100_reduced_bkg_10_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_reduced_bkg_10_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_reduced_bkg_10_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_reduced_bkg_10_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_reduced_bkg_10_small_bins',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_reduced_bkg_10_small_bins/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+
+]
+
 
 if __name__ == "__main__":
-    for i,c in enumerate(config):
-        if i in (4,5):
-            gen_and_fit(c)
+    for i,c in enumerate(config_small_bins):
+        # gen_and_fit(c) fit takes to long with 1000+ bins so only generate data for now
+        #pyspi_real_bkg(**c)
+        if i == 0:
+            pyspi_fit_0374_pre_ppc(**c)

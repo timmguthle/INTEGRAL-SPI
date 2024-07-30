@@ -17,7 +17,9 @@ from astropy.coordinates import SkyCoord
 
 normal_E_Bins = [20.0, 21.5, 23.5, 25.5, 27.5, 30.0, 32.5, 35.5, 38.5, 42.0, 45.5, 49.5, 54.0, 58.5, 63.5, 69.0, 75.0, 81.5, 89.0, 96.5, 105.0, 114.0, 124.0, 134.5, 146.0, 159.0, 172.5, 187.5, 204.0, 221.5, 240.5, 261.5, 284.0, 308.5, 335.5, 364.5, 396.0, 430.0, 467.5, 508.0, 514, 600]
 wide_E_Bins = [20, 29, 43, 62, 91, 132, 193, 282, 411, 600]
-energies = np.geomspace(40, 1200, 101, dtype=np.uint64) / 2
+energies = np.geomspace(40, 1200, 201, dtype=np.uint64) / 2
+small_E_bins = list(np.arange(20, 600.5, 0.5))
+
 E_bins_100 = list(energies)
 center_simulation = '312deg -76deg' # entspricht -48deg -
 
@@ -50,14 +52,21 @@ class SpimselectDownloader():
         self.spiselect_name = f'spiselectscw.dataset_{self.name}.par'
         self.spiselect_template = "spiselectscw.dataset_skymap43.par"
         self.center = center
-        self.E_Bins = E_Bins
-        self.Bins = [f"{E_Bins[i]}-{E_Bins[i+1]}" for i in range(len(E_Bins)- 1)]
-        self.Bins_diff = [f"{(E_Bins[i+1]-E_Bins[i]):.2f}" for i in range(len(E_Bins) - 1)]
+        self.define_bins(E_Bins)
         self.nr_E_bins = len(E_Bins) - 1
 
         assert center == 'crab' or center == False or len(center) == 2, "center must be either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates."
 
         os.chdir(self.base_dir)
+
+    def define_bins(self, E_Bins):
+        if E_Bins == 'all':
+            self.E_Bins = list(np.arange(20, 600.5, 0.5))
+        else:
+            self.E_Bins = E_Bins
+        self.Bins = [f"{self.E_Bins[i]}-{self.E_Bins[i+1]}" for i in range(len(self.E_Bins)- 1)]
+        self.Bins_diff = [f"{self.E_Bins[i+1]-self.E_Bins[i]}" for i in range(len(self.E_Bins) - 1)]
+
 
     def generate_and_run(self):
         """
@@ -86,8 +95,12 @@ class SpimselectDownloader():
         lines[15] = lines[15].replace("43", f"{self.revolutions}"[1:-1])
         lines[16] = lines[16].replace("43", f"{self.revolutions}"[1:-1])
 
-        lines[112] = f'energy_bins,s,h,"{", ".join(self.Bins)} keV",,,"Energy bins selection"\n'
-        lines[113] = f'energy_rebin,s,h,"{", ".join(self.Bins_diff)} keV",,,"Energy rebinning (must match bins)"\n'
+        if len(self.E_Bins) == 1161:
+            lines[112] = f'energy_bins,s,h,"20-600 keV",,,"Energy bins selection"\n'
+            lines[113] = f'energy_rebin,s,h,"0.5 keV",,,"Energy rebinning (must match bins)"\n'
+        else:
+            lines[112] = f'energy_bins,s,h,"{", ".join(self.Bins)} keV",,,"Energy bins selection"\n'
+            lines[113] = f'energy_rebin,s,h,"{", ".join(self.Bins_diff)} keV",,,"Energy rebinning (must match bins)"\n'
 
         # set the center of the data selection 
         if self.center:
@@ -200,7 +213,7 @@ class SpimodfitWrapper():
     source should either be False or catalog name (file must be in the cat directory)
 
     """
-    def __init__(self, name: str, revolutions: list, source=False, source_name="Crab", E_Bins=wide_E_Bins) -> None:
+    def __init__(self, name: str, revolutions: list, source=False, source_name="Crab", E_Bins=wide_E_Bins, convsky_output=True) -> None:
         self.name = name # name of the parameter files and the generated directories. replaces "skymap43" in the template files
         self.spiselect_name = f'spiselectscw.dataset_{self.name}.par'
         self.background_name = f'background_model_{self.name}.pro'
@@ -214,11 +227,20 @@ class SpimodfitWrapper():
         self.background_template = "background_model_skymap43.pro"
         self.spimodfit_template = "spimodfit.fit_Crab_skymap43_noSource.par"
         self.threeML_template = "adjust4threeML_template.pro"
-        self.E_Bins = E_Bins
-        self.Bins = [f"{E_Bins[i]}-{E_Bins[i+1]}" for i in range(len(E_Bins)- 1)]
-        self.Bins_diff = [f"{E_Bins[i+1]-E_Bins[i]}" for i in range(len(E_Bins) - 1)]
+        
         self.IRF_versions = self._generate_IRF_list()
+        self.convsky_output = convsky_output
+        self.define_bins(E_Bins)
         os.chdir(self.base_dir)
+
+    def define_bins(self, E_Bins):
+        if E_Bins == 'all':
+            self.E_Bins = list(np.arange(20, 600.5, 0.5))
+        else:
+            self.E_Bins = E_Bins
+        self.Bins = [f"{self.E_Bins[i]}-{self.E_Bins[i+1]}" for i in range(len(self.E_Bins)- 1)]
+        self.Bins_diff = [f"{self.E_Bins[i+1]-self.E_Bins[i]}" for i in range(len(self.E_Bins) - 1)]
+            
 
     def generate_scripts(self):
         """
@@ -229,7 +251,6 @@ class SpimodfitWrapper():
         self._generatespimodfit()
         self._generate_adjust4threeML()
         print(f'{Fore.GREEN}{Style.BRIGHT}Parameter file generation done{Style.RESET_ALL}')
-        
 
     def _generatespiselect(self):
         # generate the spiselect script
@@ -240,8 +261,12 @@ class SpimodfitWrapper():
         lines[15] = lines[15].replace("43", f"{self.revolutions}"[1:-1])
         lines[16] = lines[16].replace("43", f"{self.revolutions}"[1:-1])
 
-        lines[112] = f'energy_bins,s,h,"{", ".join(self.Bins)} keV",,,"Energy bins selection"\n'
-        lines[113] = f'energy_rebin,s,h,"{", ".join(self.Bins_diff)} keV",,,"Energy rebinning (must match bins)"\n'
+        if len(self.E_Bins) == 1161:
+            lines[112] = f'energy_bins,s,h,"20-600 keV",,,"Energy bins selection"\n'
+            lines[113] = f'energy_rebin,s,h,"0.5 keV",,,"Energy rebinning (must match bins)"\n'
+        else:
+            lines[112] = f'energy_bins,s,h,"{", ".join(self.Bins)} keV",,,"Energy bins selection"\n'
+            lines[113] = f'energy_rebin,s,h,"{", ".join(self.Bins_diff)} keV",,,"Energy rebinning (must match bins)"\n'
 
         with open(self.spiselect_name, "w") as f:
             f.writelines(lines)
@@ -290,6 +315,9 @@ class SpimodfitWrapper():
         # update the number of bins
         lines[31] = lines[31].replace("9", f"{len(self.Bins)}")
         lines[35] = lines[35].replace("9", f"{len(self.Bins)}")
+
+        if self.convsky_output:
+            lines[78] = lines[78].replace("0", "2", 1) # onlz the first occurence
 
 
         # chose the source or no source version if source, set the catalog name
@@ -558,7 +586,7 @@ def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins, ex
 
 
 if __name__ == '__main__':
-    pass
+    
     #get_data_from_pyspi(
     #    "374_100_bins_source", 
     #    [374], 
@@ -567,7 +595,17 @@ if __name__ == '__main__':
     #    center=[-48, -76]
     #)
 
-    #download_and_copy_to_pyspi("374_center", [374], center=[-48, -76], E_Bins=normal_E_Bins, extension='_center')
+    
+    #wrapper = SpimodfitWrapper("bright_100_new", [374], source="cat_sim_source", source_name="sim_source", E_Bins=normal_E_Bins)
+    #wrapper.generate_scripts()
+
+    
+    #wrapper.run_spimodfit()
+    #wrapper.run_adjust4threeML()
+
+    dl = SpimselectDownloader("374_center_small_bins", [374], center=[-48, -76], E_Bins=small_E_bins)
+    dl.adjust_for_pyspi()
+    dl.copy_to_pyspi(extension='_center_small_bins')
     #gen = SpimodfitWrapper('skymap374-2', [374])
     # gen.generate_scripts()
     # gen.runscripts()
