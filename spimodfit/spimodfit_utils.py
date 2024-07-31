@@ -413,7 +413,7 @@ class SpimodfitWrapper():
         print('background generation done')
 
     def run_spimodfit(self):
-        print(f'{Style.BRIGHT}running spimodfit...{Style.RESET_ALL}')
+        print(f'{Style.BRIGHT}running spimodfit for "{self.name}"...{Style.RESET_ALL}')
         subprocess.run(f"./submit-spimodfit_v3.2_ga05us.sh fit_Crab_{self.name} clobber", shell=True)
 
         # print the last lines of the log file

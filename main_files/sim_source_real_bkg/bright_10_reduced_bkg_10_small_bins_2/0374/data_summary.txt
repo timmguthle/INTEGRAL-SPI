@@ -1,0 +1,7 @@
+K: 0.007
+piv: 100
+index: -2
+Scale Background: 0.1
+Original Data Path: /home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins
+Data Path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_reduced_bkg_10_small_bins_2/0374
+compleated at 2024-07-30 23:10:26.514773

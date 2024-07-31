@@ -52,7 +52,8 @@ def pyspi_real_bkg(
     component1 = SpectralComponent("pl", shape=pl)
     source = PointSource("Test", ra=ra, dec=dec, components=[component1])
 
-    emod = np.geomspace(18, 2000, 200)
+    #emod = np.geomspace(18, 2000, 200)
+    emod = np.arange(20, 600.5, 0.5)
     spec = source(emod)
     spec_binned = powerlaw_binned_spectrum(emod, spec)
     print(f'creating data for {data_path} with K={K}, piv={piv}, index={index_pl}, background scale={scale_background}')
@@ -62,13 +63,13 @@ def pyspi_real_bkg(
         os.makedirs(f"{data_path}")
 
 
-    # Energy Bins
+    # read in Energy Bins
     with fits.open(f"{orig_data_path}/energy_boundaries.fits") as file:
 
         t = Table.read(file[1])
         energy_bins = np.append(t["E_MIN"], t["E_MAX"][-1])
         print(f'Number of energy bins: {len(energy_bins)-1}')
-    # Pointings and Start Times
+    # read in Pointings and Times for the Response generation
     with fits.open(f"{orig_data_path}/pointing.fits") as file:
         t = Table.read(file[1])
         
@@ -191,7 +192,8 @@ def pyspi_fit_0374_pre_ppc(
         pointings,
         source_model,
         Energy_range,
-        np.geomspace(18, 2000, 200),
+        np.arange(20, 600.5, 0.5),
+        #np.geomspace(18, 2000, 200),
         no_rebinning,
         #log_binning_function_for_x_number_of_bins(70),
         #spimodfit_binning_SE,
@@ -439,10 +441,91 @@ config_small_bins = [
 
 ]
 
+config_small_bins_2 = [
+    {
+        'name': 'bright_100_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": None,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_100_reduced_bkg_10_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_100_reduced_bkg_10_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-2,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'bright_10_reduced_bkg_10_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/bright_10_reduced_bkg_10_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-3,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+    {
+        'name': 'normal_reduced_bkg_10_small_bins_2',
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_reduced_bkg_10_small_bins_2/0374',
+        "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center_small_bins',
+        'rev': [374],
+        "piv": 100,
+        "scale_background": 0.1,
+        "K": 7e-4,
+        "fit_path_extension": "pre_ppc",
+        "new_pointings": True,
+        "Energy_range": (20, 600),
+        'center': [-48, -76]
+    },
+
+]
+
 
 if __name__ == "__main__":
-    for i,c in enumerate(config_small_bins):
-        # gen_and_fit(c) fit takes to long with 1000+ bins so only generate data for now
-        #pyspi_real_bkg(**c)
-        if i == 0:
+    for i,c in enumerate(config_small_bins_2):
+        #gen_and_fit(c) #fit takes to long with 1000+ bins so only generate data for now
+        if i == 4:
             pyspi_fit_0374_pre_ppc(**c)
