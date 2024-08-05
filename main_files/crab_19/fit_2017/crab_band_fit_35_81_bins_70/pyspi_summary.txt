@@ -1,0 +1,9 @@
+Energy range: (35, 81)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_35_81_bins_70
+Result: [ 8.98507500e-04 -1.80012921e+00  8.08595686e-08 -7.87166715e+00]
+Covariance: [[ 7.18638885e-12  1.11396765e-09  2.85609733e-15 -2.72577391e-08]
+ [ 1.11396765e-09  1.67304940e-06 -2.67017404e-12 -8.34521990e-06]
+ [ 2.85609733e-15 -2.67017404e-12  1.50404298e-14  6.41418123e-08]
+ [-2.72577391e-08 -8.34521990e-06  6.41418123e-08  3.73388237e-01]]
+compleated at 2024-08-03 21:07:19.944898

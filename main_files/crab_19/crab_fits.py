@@ -1,0 +1,368 @@
+import sys, os
+sys.path.insert(0, os.path.abspath('./main_files'))
+
+import numpy as np
+from MultinestClusterFit import MultinestClusterFit
+from RebinningFunctions import spimodfit_binning_SE, log_binning_function_for_x_number_of_bins, no_rebinning #, rebin_data_exp_50
+from PointingClusters import *
+from ModelSources import *
+import pickle
+from typing import Union
+
+
+def crab_band_fit_wide_energy(
+        data_path: Union[str, None] = None,
+        fit_path: Union[str, None] = None,
+        energy_range: tuple[int, int]= (20,1000),
+        new_pointing_clustering: bool = True,
+        binning_func = no_rebinning,
+        **kwargs,
+):
+    """
+    crab with band function. break energy fixed at 500keV. Beta is fixed at -2.25
+    Pulsar as pl included. 
+
+    with this function I will only fit K and alpha(first index)
+    parameters:
+        data_path: path to the data file (path to .fits files)
+        fit_path: path to the output file (generated if needed)
+
+    """
+
+    source_model = define_sources((
+            (crab_band, (100,)),
+            (s_1A_0535_262_pl, (100,)),
+    ))
+
+    assert data_path is not None, "data_path must be given"
+    assert fit_path is not None, "fit_path must be given"
+
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
+
+    if new_pointing_clustering:
+        # maybe play around with these parameters, but they should be fine
+        Cluster = PointingClusters(
+                (data_path,),
+                min_angle_dif=1.5,
+                max_angle_dif=10.,
+                max_time_dif=0.2,
+                radius_around_source=10.,
+                min_time_elapsed=300.,
+                cluster_size_range=(2,2),
+            )
+        pointings = Cluster.pointings
+        save_clusters(pointings, data_path)
+    else:
+        pointings = load_clusters(data_path)
+
+    fit = MultinestClusterFit(
+        pointings,
+        source_model,
+        energy_range=energy_range,
+        emod=np.geomspace(energy_range[0], energy_range[1], 500),
+        binning_func=binning_func,
+        folder=fit_path,
+        **kwargs,
+    )
+    
+    fit.parameter_fit_distribution()
+    fit.text_summaries(reference_values=False)
+
+    # chainconsumer
+    p = ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+    val = np.array([i[1] for i in fit._cc.analysis.get_summary(parameters=p).values()])
+    cov = fit._cc.analysis.get_covariance(parameters=p)[1]
+    
+    np.savetxt(f"{fit_path}/fit_val.txt", val, header=" ".join(p))
+    np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix")
+
+    with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
+        f.write(f"Energy range: {energy_range}\n")
+        f.write(f"Data path: {data_path}\n")
+        f.write(f"Fit path: {fit_path}\n")
+        f.write(f"Result: {val}\n")
+        f.write(f"Covariance: {cov}\n")
+        f.write(f"compleated at {datetime.now()}")
+
+
+def crab_band_fit(
+        data_path: Union[str, None] = None,
+        fit_path: Union[str, None] = None,
+        energy_range: tuple[int, int]= (20,600),
+        new_pointing_clustering: bool = True,
+        binning_func = no_rebinning,
+        **kwargs,
+):
+    """
+    crab with band function. break energy fixed at 500keV. Beta is fixed at -2.25
+    Pulsar as pl included. 
+
+    with this function I will only fit K and alpha(first index)
+    parameters:
+        data_path: path to the data file (path to .fits files)
+        fit_path: path to the output file (generated if needed)
+
+    """
+
+    source_model = define_sources((
+            (crab_lower_band, (100,)),
+            (s_1A_0535_262_pl, (100,)),
+    ))
+
+    assert data_path is not None, "data_path must be given"
+    assert fit_path is not None, "fit_path must be given"
+
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
+
+    if new_pointing_clustering:
+        # maybe play around with these parameters, but they should be fine
+        Cluster = PointingClusters(
+                (data_path,),
+                min_angle_dif=1.5,
+                max_angle_dif=10.,
+                max_time_dif=0.2,
+                radius_around_source=10.,
+                min_time_elapsed=300.,
+                cluster_size_range=(2,2),
+            )
+        pointings = Cluster.pointings
+        save_clusters(pointings, data_path)
+    else:
+        pointings = load_clusters(data_path)
+
+    fit = MultinestClusterFit(
+        pointings,
+        source_model,
+        energy_range=energy_range,
+        emod=np.geomspace(energy_range[0], energy_range[1], 200),
+        binning_func=binning_func,
+        folder=fit_path,
+        **kwargs,
+    )
+    
+    fit.parameter_fit_distribution()
+    fit.text_summaries(reference_values=False)
+
+    # chainconsumer
+    p = ["Crab K", "Crab alpha", "A 0535 262 K", "A 0535 262 index"]
+    val = np.array([i[1] for i in fit._cc.analysis.get_summary(parameters=p).values()])
+    cov = fit._cc.analysis.get_covariance(parameters=p)[1]
+    
+    np.savetxt(f"{fit_path}/fit_val.txt", val, header=" ".join(p))
+    np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix")
+
+    with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
+        f.write(f"Energy range: {energy_range}\n")
+        f.write(f"Data path: {data_path}\n")
+        f.write(f"Fit path: {fit_path}\n")
+        f.write(f"Result: {val}\n")
+        f.write(f"Covariance: {cov}\n")
+        f.write(f"compleated at {datetime.now()}")
+
+config_2003 = [
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit",
+        "energy_range": (20, 600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_30_400",
+        'new_pointing_clustering': False,
+        "energy_range": (30, 400),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_35_81",
+        'new_pointing_clustering': False,
+        "energy_range": (35, 81),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_bins_70",
+        "energy_range": (20, 600),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "new_pointing_clustering": False,
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_30_100_bins_70",
+        'new_pointing_clustering': False,
+        "energy_range": (30, 100),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_35_81_bins_70",
+        'new_pointing_clustering': False,
+        "energy_range": (35, 81),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+    }, 
+]
+
+config_2017 = [
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit",
+        "energy_range": (20, 600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_30_400",
+        'new_pointing_clustering': False,
+        "energy_range": (30, 400),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_35_81",
+        'new_pointing_clustering': False,
+        "energy_range": (35, 81),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_bins_70",
+        "energy_range": (20, 600),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "new_pointing_clustering": False,
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_30_400_bins_70",
+        'new_pointing_clustering': False,
+        "energy_range": (30, 400),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_35_81_bins_70",
+        'new_pointing_clustering': False,
+        "energy_range": (35, 81),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+    }, 
+]
+
+config_new = [
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_20_400",
+        'new_pointing_clustering': False,
+        "energy_range": (20, 400),
+    },
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_20_400",
+        'new_pointing_clustering': False,
+        "energy_range": (20, 400),
+    },
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_20_500",
+        'new_pointing_clustering': False,
+        "energy_range": (20, 500),
+    },
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_20_500",
+        'new_pointing_clustering': False,
+        "energy_range": (20, 500),
+    },
+]
+
+config_combined = [
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003_combined/crab_band_fit",
+        'new_pointing_clustering': True,
+        "energy_range": (20,600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003_combined/crab_band_fit_20_400",
+        'new_pointing_clustering': False,
+        "energy_range": (20,400),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003_combined/crab_band_fit_35_600",
+        'new_pointing_clustering': False,
+        "energy_range": (35,600),
+    }, 
+    # 2017 data
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017_combined/crab_band_fit",
+        'new_pointing_clustering': True,
+        "energy_range": (20,600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017_combined/crab_band_fit_20_400",
+        'new_pointing_clustering': False,
+        "energy_range": (20,400),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_combined",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017_combined/crab_band_fit_35_600",
+        'new_pointing_clustering': False,
+        "energy_range": (35,600),
+    }, 
+
+]
+
+config_combined_2 = [
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2003_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2003_combined/crab_band_fit",
+        'new_pointing_clustering': True,
+        "energy_range": (20,1000),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2003_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2003_combined/crab_band_fit_20_600",
+        'new_pointing_clustering': False,
+        "energy_range": (20,600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2003_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2003_combined/crab_band_fit_35_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (35,1000),
+    }, 
+    # 2017 data
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2017_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2017_combined/crab_band_fit",
+        'new_pointing_clustering': True,
+        "energy_range": (20,1000),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2017_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2017_combined/crab_band_fit_20_600",
+        'new_pointing_clustering': False,
+        "energy_range": (20,600),
+    }, 
+    {
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2_2017_comb",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2_2017_combined/crab_band_fit_35_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (35,1000),
+    }, 
+
+]
+
+if __name__ == "__main__":
+    # for conf in config_2003[1:]:
+    #     crab_band_fit(**conf)
+    #     print(conf['fit_path'] + " done")
+    # for conf in config_2017:
+    #     crab_band_fit(**conf)
+    #     print(conf['fit_path'] + " done")
+    # for conf in config_combined:
+    #     crab_band_fit(**conf)
+    #     print(conf['fit_path'] + " done")
+    for conf in config_combined_2:
+        crab_band_fit_wide_energy(**conf)
+        print(conf['fit_path'] + " done")
+    

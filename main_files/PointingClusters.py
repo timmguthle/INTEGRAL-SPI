@@ -86,7 +86,7 @@ class PointingClusters: #add min time diff
         
         self._load_base_rsp()
         pointings = []
-        self._get_scw_ids(center_ra, center_dec, print_results=True)
+        self._get_scw_ids(center_ra, center_dec, print_results=False)
         cq = ClusteredQuery(
             self._scw_ids,
             angle_weight=0.,

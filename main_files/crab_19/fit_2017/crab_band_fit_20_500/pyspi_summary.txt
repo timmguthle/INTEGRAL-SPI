@@ -1,0 +1,9 @@
+Energy range: (20, 500)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2017/crab_band_fit_20_500
+Result: [ 8.28915206e-04 -1.94213155e+00  1.98870019e-08 -6.38921214e+00]
+Covariance: [[1.26601717e-11 1.40985731e-08 1.58426020e-13 4.04110764e-07]
+ [1.40985731e-08 1.90316136e-05 1.07481512e-10 2.45498995e-04]
+ [1.58426020e-13 1.07481512e-10 2.74601688e-13 4.54561542e-07]
+ [4.04110764e-07 2.45498995e-04 4.54561542e-07 1.55935858e+00]]
+compleated at 2024-08-04 14:07:33.410695

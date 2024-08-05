@@ -13,6 +13,7 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.wcs import WCS
 from astropy.coordinates import SkyCoord
+from typing import Union
 
 
 normal_E_Bins = [20.0, 21.5, 23.5, 25.5, 27.5, 30.0, 32.5, 35.5, 38.5, 42.0, 45.5, 49.5, 54.0, 58.5, 63.5, 69.0, 75.0, 81.5, 89.0, 96.5, 105.0, 114.0, 124.0, 134.5, 146.0, 159.0, 172.5, 187.5, 204.0, 221.5, 240.5, 261.5, 284.0, 308.5, 335.5, 364.5, 396.0, 430.0, 467.5, 508.0, 514, 600]
@@ -45,7 +46,7 @@ class SpimselectDownloader():
         (Note: cant handle to small energy bins. If given spiselect will create best possible. But different form the given.)
     center: str or tuple or False, center of the data selection. Either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates.
     """
-    def __init__(self, name: str, revolutions: list[int], E_Bins=wide_E_Bins, center=False) -> None:
+    def __init__(self, name: str, revolutions: list[int], E_Bins=wide_E_Bins, center: Union[bool, str, list] =False, dataset: str = 'SE') -> None:
         self.name = name
         self.revolutions = revolutions
         self.base_dir = "/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/"
@@ -54,8 +55,10 @@ class SpimselectDownloader():
         self.center = center
         self.define_bins(E_Bins)
         self.nr_E_bins = len(E_Bins) - 1
+        self.dataset = dataset
 
         assert center == 'crab' or center == False or len(center) == 2, "center must be either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates."
+        assert dataset in ['SE', 'PE'], "dataset must be either 'SE' or 'PE'"
 
         os.chdir(self.base_dir)
 
@@ -94,6 +97,10 @@ class SpimselectDownloader():
 
         lines[15] = lines[15].replace("43", f"{self.revolutions}"[1:-1])
         lines[16] = lines[16].replace("43", f"{self.revolutions}"[1:-1])
+
+        # choose the dataset to use. If SE, do nothing
+        if self.dataset == 'PE':
+            lines[111] = lines[111].replace("Private_low", "PSD/Private_low")
 
         if len(self.E_Bins) == 1161:
             lines[112] = f'energy_bins,s,h,"20-600 keV",,,"Energy bins selection"\n'
@@ -167,17 +174,25 @@ class SpimselectDownloader():
         print(f'{Fore.GREEN}adjusted files for pyspi{Style.RESET_ALL}')
 
 
-    def copy_to_pyspi(self, path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/", extension=''):
+    def copy_to_pyspi(self, path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/", extension='', use_rev_name=True):
         """
         copy the dataset to the pyspi directory
         """
-        compleate_path = f'{path}{self.revolutions[0]:04}{extension}/'
-        if not os.path.exists(compleate_path):
-            os.mkdir(compleate_path)
-        if len(self.revolutions) > 1:
-            print(f'{Fore.RED}more than one revolution in the dataset. Nameing after first revolution{Style.RESET_ALL}')
+        if use_rev_name:
+            compleate_path = f'{path}{self.revolutions[0]:04}{extension}/'
+            if not os.path.exists(compleate_path):
+                os.makedirs(compleate_path)
+            if len(self.revolutions) > 1:
+                print(f'{Fore.RED}more than one revolution in the dataset. Nameing after first revolution{Style.RESET_ALL}')
+        else:
+            compleate_path = path
+            if not os.path.exists(compleate_path):
+                os.makedirs(compleate_path)
+
+        print(compleate_path)
 
         subprocess.run(f"cp {self.base_dir}dataset_{self.name}/spi2/*.fits {compleate_path}", shell=True)
+        subprocess.run(f"cp {compleate_path}/evts_det_spec_orig.fits {compleate_path}/evts_det_spec.fits", shell=True)
         print(f'{Fore.GREEN}copied to pyspi{Style.RESET_ALL}')
 
 
@@ -494,6 +509,10 @@ class SpimodfitWrapper():
                 array = np.pad(hdul[bin].data, ((0,0), (0,180)), mode="wrap")[:, 180:]
                 image_list.append(np.flip(array, axis=0).flatten())
 
+            # make one more plot with all counts summed
+            combined_data = np.sum(np.array(image_list), axis=0)
+            image_list.append(combined_data)
+
         npix = hp.nside2npix(nside)
         hpx_maps = [np.zeros(npix) for _ in range(len(image_list))]
         theta, phi = np.mgrid[0:np.pi:180j, 0:2*np.pi:360j]
@@ -505,8 +524,13 @@ class SpimodfitWrapper():
 
             fig = plt.figure(figsize=(16,8))
 
-            ax = plt.axes((0.05,0,0.6,0.6),projection="galactic degrees aitoff", center=center_skymap)
-            ax2 = plt.axes((0.6,0.1,0.4,0.4),projection="galactic degrees zoom", center=center, radius=radius)
+            if i != len(image_list) - 1:
+                fig.suptitle(f"Skymap of energy bin {i+1}", fontsize=16)
+            else:
+                fig.suptitle("Sum of all energy bins", fontsize=16)
+
+            ax = plt.axes((0.05,0.25,0.6,0.6),projection="galactic degrees aitoff", center=center_skymap)
+            ax2 = plt.axes((0.6,0.30,0.4,0.4),projection="galactic degrees zoom", center=center, radius=radius)
 
             norm = TwoSlopeNorm(vmin=hpx_maps[i].min(), vcenter=0, vmax=hpx_maps[i].max())
             #norm2 = TwoSlopeNorm(vmin=hpx_map.min()/10, vcenter=0, vmax=hpx_map.max())
@@ -538,12 +562,12 @@ class SpimodfitWrapper():
                 markersize=30,
                 markeredgewidth=3)
             
-            ax.plot(
-                crab_center.ra.deg, crab_center.dec.deg,
-                transform=ax.get_transform('fk5'),
-                marker=ligo.skymap.plot.reticle(),
-                markersize=30,
-                markeredgewidth=3)
+            # ax.plot(
+            #     crab_center.ra.deg, crab_center.dec.deg,
+            #     transform=ax.get_transform('fk5'),
+            #     marker=ligo.skymap.plot.reticle(),
+            #     markersize=30,
+            #     markeredgewidth=3)
             
             if sweep_search_path:
                 pos = ax2.scatter(ra, dec, c=K, transform=ax2.get_transform('fk5'), s=10, alpha=0.4)    
@@ -578,11 +602,11 @@ def fit_with_data_from_pyspi(name,
     wrapper.run_spimodfit()
     wrapper.run_adjust4threeML()
 
-def download_and_copy_to_pyspi(name, rev, center=False, E_Bins=normal_E_Bins, extension=''):
-    downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins)
+def download_and_copy_to_pyspi(name, rev, center: Union[bool, str, list]=False, E_Bins=normal_E_Bins, dataset='SE', extension='', path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/", use_rev_name=True):
+    downloader = SpimselectDownloader(name, rev, center=center, E_Bins=E_Bins, dataset=dataset)
     downloader.generate_and_run()
     downloader.adjust_for_pyspi()
-    downloader.copy_to_pyspi(extension=extension)
+    downloader.copy_to_pyspi(extension=extension, path=path, use_rev_name=use_rev_name)
 
 
 if __name__ == '__main__':
@@ -603,13 +627,14 @@ if __name__ == '__main__':
     #wrapper.run_spimodfit()
     #wrapper.run_adjust4threeML()
 
-    dl = SpimselectDownloader("374_center_small_bins", [374], center=[-48, -76], E_Bins=small_E_bins)
-    dl.adjust_for_pyspi()
-    dl.copy_to_pyspi(extension='_center_small_bins')
-    #gen = SpimodfitWrapper('skymap374-2', [374])
+    # dl = SpimselectDownloader("374_center_small_bins", [374], center=[-48, -76], E_Bins=small_E_bins)
+    # dl.adjust_for_pyspi()
+    # dl.copy_to_pyspi(extension='_center_small_bins')
+    gen = SpimodfitWrapper('374_center', [374], E_Bins=normal_E_Bins)
     # gen.generate_scripts()
-    # gen.runscripts()
-    #gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation, sweep_search_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2")
+    # gen.run_background()
+    # gen.run_spimodfit()
+    gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation)
     #downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
     #downloader.generate_and_run()
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")
