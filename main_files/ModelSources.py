@@ -82,6 +82,25 @@ def crab_br_pl_100(model, piv=100):
     
     model.add_source(ps)
     return model
+
+
+def crab_broken_powerlaw(model, piv=100):
+    ra, dec = 83.6333, 22.0144
+    
+    pl = Broken_powerlaw()
+    pl.piv = piv
+    pl.alpha.min_value = -2.5
+    pl.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-3)
+    pl.alpha.prior = Uniform_prior(lower_bound=-2.3, upper_bound=-1.6)
+    pl.beta.prior = Uniform_prior(lower_bound=-3., upper_bound=-1.6)
+    pl.xb = 50.
+    pl.xb.free = True
+    pl.xb.prior = Uniform_prior(lower_bound=20 , upper_bound=100)
+    component1 = SpectralComponent("br_pl", shape=pl)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    
+    model.add_source(ps)
+    return model
     
 
 def crab_lower_band(model, piv=100):
@@ -298,3 +317,5 @@ def true_values(include_position=False):
         crab_values = (names[:-2], crab_values[:,:-2])
     
     return crab_values
+
+print(Uniform_prior(lower_bound=0.4, upper_bound=1).from_unit_cube(np.linspace(0, 1, 100)))

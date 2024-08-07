@@ -596,7 +596,6 @@ class MultinestClusterFit:
         
         with open("error_test", "rb") as f:
             (self._counts,) = pickle.load(f)
-
         # was bringt das hier?
         
         
@@ -675,6 +674,8 @@ class MultinestClusterFit:
                 c_counts_f,
                 self._energy_range
             )
+            # c shape: (det * nr_pointings_in_comb, energy_bin)
+
             nd = len(dets_0)
             counts.append(tuple([c[i*nd : (i+1)*nd] for i in range(len(combination))]))
             ebs.append(eb)
