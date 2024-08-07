@@ -440,6 +440,7 @@ config_fit_psd_eff = [
         "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003_psd_eff/crab_band_fit_100_1000",
         'new_pointing_clustering': False,
         "energy_range": (100,1000),
+        "parameters": ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index", "PSD eff"]
     },
     # with 2017 data
     {
@@ -496,7 +497,7 @@ if __name__ == "__main__":
     # for conf in config_fit_psd_eff:
     #     crab_band_fit_wide_energy(**conf)
     #     print(conf['fit_path'] + " done")
-    crab_band_fit_wide_energy(**config_fit_psd_eff[0])
+    crab_band_fit_wide_energy(**config_fit_psd_eff[2])
     # parameter_names = config_fit_psd_eff[0]['parameters']
     # cc = ChainConsumer()
     # chain = np.loadtxt('./chains/1-post_equal_weights.dat')
