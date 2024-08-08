@@ -67,34 +67,34 @@ def crab_band_fit_wide_energy(
     else:
         pointings = load_clusters(data_path)
 
-    fit = MultinestClusterFit(
-        pointings,
-        source_model,
-        energy_range=energy_range,
-        emod=np.geomspace(energy_range[0], energy_range[1], 500),
-        binning_func=binning_func,
-        folder=fit_path,
-        parameter_names=parameters,
-    )
+    # fit = MultinestClusterFit(
+    #     pointings,
+    #     source_model,
+    #     energy_range=energy_range,
+    #     emod=np.geomspace(energy_range[0], energy_range[1], 500),
+    #     binning_func=binning_func,
+    #     folder=fit_path,
+    #     parameter_names=parameters,
+    # )
     
-    fit.parameter_fit_distribution()
-    fit.text_summaries(reference_values=False)
+    # fit.parameter_fit_distribution()
+    # fit.text_summaries(reference_values=False)
 
-    # chainconsumer
+    # # chainconsumer
     
-    val = np.array([i[1] for i in fit._cc.analysis.get_summary(parameters=p).values()])
-    cov = fit._cc.analysis.get_covariance(parameters=p)[1]
+    # val = np.array([i[1] for i in fit._cc.analysis.get_summary(parameters=p).values()])
+    # cov = fit._cc.analysis.get_covariance(parameters=p)[1]
     
-    np.savetxt(f"{fit_path}/fit_val.txt", val, header=" ".join(p))
-    np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix")
+    # np.savetxt(f"{fit_path}/fit_val.txt", val, header=" ".join(p))
+    # np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix")
 
-    with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
-        f.write(f"Energy range: {energy_range}\n")
-        f.write(f"Data path: {data_path}\n")
-        f.write(f"Fit path: {fit_path}\n")
-        f.write(f"Result: {val}\n")
-        f.write(f"Covariance: {cov}\n")
-        f.write(f"compleated at {datetime.now()}")
+    # with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
+    #     f.write(f"Energy range: {energy_range}\n")
+    #     f.write(f"Data path: {data_path}\n")
+    #     f.write(f"Fit path: {fit_path}\n")
+    #     f.write(f"Result: {val}\n")
+    #     f.write(f"Covariance: {cov}\n")
+    #     f.write(f"compleated at {datetime.now()}")
 
 
 def crab_band_fit(
