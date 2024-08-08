@@ -1,5 +1,5 @@
 import os, sys
-sys.path.insert(0, os.path.abspath('/home/tguethle/Documents/spi/Master_Thesis'))
+sys.path.insert(0, os.path.abspath('./'))
 
 from spimodfit.spimodfit_utils import SpimodfitWrapper, SpimselectDownloader, download_and_copy_to_pyspi
 import numpy as np
@@ -102,13 +102,13 @@ def combine_datasets_corrected(path_SE: str, path_PE:str, new_path:str, psd_eff:
             counts_PE = hdul_2[1].data["COUNTS"]
             counts_SE = hdul_1[1].data["COUNTS"]
 
-            counts_comb = counts_PE 
+            counts_comb = counts_PE / psd_eff
             # find the first bin, where the energy is bigger than the break energy
             break_bin = np.where(data_PE[2] > break_energy)[0][0]
 
             # replace counts under the break energy with the counts from the SE dataset
             for i in range(break_bin):
-                counts_comb[:,i] = counts_SE[:, i] * psd_eff
+                counts_comb[:,i] = counts_SE[:, i] 
 
             hdul_1[1].data["COUNTS"] = counts_comb
 
