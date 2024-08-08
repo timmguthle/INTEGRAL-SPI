@@ -638,7 +638,7 @@ class MultinestClusterFit:
         if not os.path.exists("./chains"):
             os.mkdir("chains")
         sampler = pymultinest.run(
-            logLba_mult, prior, num_params, num_params, n_live_points=800, resume=False, verbose=True
+            logLba_mult, prior, num_params, num_params, n_live_points=800, resume=False, verbose=True,
         )
     
     def _prepare_fit_data(self):
