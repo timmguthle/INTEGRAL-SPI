@@ -327,7 +327,7 @@ config_combined_2 = [
     {
         "data_path": "./main_files/crab_19/data_2_2003_comb",
         "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_20_1000",
-        'new_pointing_clustering': False,
+        'new_pointing_clustering': True,
         "energy_range": (20,1000),
     }, 
     {
@@ -346,7 +346,7 @@ config_combined_2 = [
     {
         "data_path": "./main_files/crab_19/data_2_2017_comb",
         "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_fit_20_1000",
-        'new_pointing_clustering': False,
+        'new_pointing_clustering': True,
         "energy_range": (20,1000),
     }, 
     {
