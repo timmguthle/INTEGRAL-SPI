@@ -142,6 +142,26 @@ def crab_band(model, piv=100):
     model.add_source(ps)
     return model
 
+def crab_band_free_E_c(model, piv=100):
+    ra, dec = 83.6333, 22.0144
+    
+    s = C_Band()
+    s.piv = piv
+    s.alpha.min_value = -2.1
+    s.alpha = -1.98
+    s.beta.max_value = -2.1
+    s.beta = -2.25
+    s.xp = 500
+    s.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-3)
+    s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-1.7)
+    s.beta.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-2.1)
+    s.xp.prior = Uniform_prior(lower_bound=300, upper_bound=1000)
+    s.xp.free = True
+    component1 = SpectralComponent("band", shape=s)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    model.add_source(ps)
+    return model
+
 def s_1A_0535_262_pl(model, piv):
     ra, dec = 84.7270, 26.3160
     
@@ -318,3 +338,8 @@ def true_values(include_position=False):
     
     return crab_values
 
+if __name__ == "__main__":
+    model = source_model = define_sources((
+            (crab_band_free_E_c, (100,)),
+        ))
+    print(model.free_parameters.values())

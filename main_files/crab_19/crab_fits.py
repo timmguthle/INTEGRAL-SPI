@@ -42,7 +42,7 @@ def crab_band_fit_wide_energy(
                 (crab_model, (100,)),
                 (s_1A_0535_262_pl, (100,)),
         ))
-        p = ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+        p = ["Crab K", "Crab alpha", "Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
 
     assert data_path is not None, "data_path must be given"
     assert fit_path is not None, "fit_path must be given"
@@ -361,7 +361,57 @@ config_combined_2 = [
         'new_pointing_clustering': False,
         "energy_range": (27,1000),
     }, 
+]
 
+config_2_variable_E_c = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_20_1000_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_20_700_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (20,700),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_25_1000_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (25,1000),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_fit_20_1000_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_fit_20_700_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (20,700),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_fit_25_1000_fit_E_c",
+        'new_pointing_clustering': False,
+        "energy_range": (25,1000),
+        "binning_func": log_binning_function_for_x_number_of_bins(70),
+        "crab_model": crab_band_free_E_c,
+    }, 
 ]
 
 config_combined_3 = [
@@ -492,7 +542,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_combined_2:
+    for conf in config_2_variable_E_c:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_fit_psd_eff:
