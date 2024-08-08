@@ -122,7 +122,7 @@ def get_data_and_combine_20_1000():
         E_Bins=E_bins_100,
         center='crab',
         use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2003_center',
+        path='./main_files/crab_19/data_3_2003_center',
     )
 
 
@@ -132,7 +132,7 @@ def get_data_and_combine_20_1000():
         E_Bins=E_bins_100,
         center='crab',
         use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2017_center',
+        path='./main_files/crab_19/data_3_2017_center',
     )
 
     download_and_copy_to_pyspi(
@@ -142,7 +142,7 @@ def get_data_and_combine_20_1000():
         center='crab',
         dataset='PE',
         use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2017_PE',
+        path='./main_files/crab_19/data_3_2017_PE',
     )
 
     download_and_copy_to_pyspi(
@@ -152,18 +152,18 @@ def get_data_and_combine_20_1000():
         center='crab',
         dataset='PE',
         use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2003_PE',
+        path='./main_files/crab_19/data_3_2003_PE',
     )
 
     combine_datasets_corrected(
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2003_center',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2003_PE',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2003_comb', 0.88)
+        './main_files/crab_19/data_3_2003_center',
+        './main_files/crab_19/data_3_2003_PE',
+        './main_files/crab_19/data_3_2003_comb', 0.88)
     
     combine_datasets_corrected(
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2017_center',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2017_PE',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_3_2017_comb', 0.85)
+        './main_files/crab_19/data_3_2017_center',
+        './main_files/crab_19/data_3_2017_PE',
+        './main_files/crab_19/data_3_2017_comb', 0.85)
     
 
 
@@ -174,9 +174,9 @@ if __name__ == '__main__':
 
 
 
-    # combine_datasets_corrected('/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_center',
-    #                  '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_PE',
-    #                  '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_test', 0.88)
+    # combine_datasets_corrected('./main_files/crab_19/data_2003_center',
+    #                  './main_files/crab_19/data_2003_PE',
+    #                  './main_files/crab_19/data_2003_test', 0.88)
 
 
 # download_and_copy_to_pyspi(
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 #     E_Bins=E_bins_50,
 #     center='crab',
 #     use_rev_name=False,
-#     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_center',
+#     path='./main_files/crab_19/data_2003_center',
 # )
 
 
@@ -195,7 +195,7 @@ if __name__ == '__main__':
 #     E_Bins=E_bins_50,
 #     center='crab',
 #     use_rev_name=False,
-#     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_center',
+#     path='./main_files/crab_19/data_2017_center',
 # )
 
 # download_and_copy_to_pyspi(
@@ -205,7 +205,7 @@ if __name__ == '__main__':
 #     center='crab',
 #     dataset='PE',
 #     use_rev_name=False,
-#     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_PE',
+#     path='./main_files/crab_19/data_2017_PE',
 # )
 
 # download_and_copy_to_pyspi(
@@ -215,5 +215,5 @@ if __name__ == '__main__':
 #     center='crab',
 #     dataset='PE',
 #     use_rev_name=False,
-#     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_PE',
+#     path='./main_files/crab_19/data_2003_PE',
 # )
