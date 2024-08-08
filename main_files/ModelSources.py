@@ -318,4 +318,3 @@ def true_values(include_position=False):
     
     return crab_values
 
-print(Uniform_prior(lower_bound=0.4, upper_bound=1).from_unit_cube(np.linspace(0, 1, 100)))
