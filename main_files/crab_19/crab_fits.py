@@ -42,7 +42,7 @@ def crab_band_fit_wide_energy(
                 (crab_model, (100,)),
                 (s_1A_0535_262_pl, (100,)),
         ))
-        p = ["Crab K", "Crab alpha", "Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+        p = ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
 
     assert data_path is not None, "data_path must be given"
     assert fit_path is not None, "fit_path must be given"
@@ -326,6 +326,18 @@ config_combined_2 = [
     # data 2 comb is the combi with the eff from the paper 
     {
         "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_200_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (200,1000),
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_fit_200_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (200,1000),
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
         "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_fit_20_1000",
         'new_pointing_clustering': False,
         "energy_range": (20,1000),
@@ -542,7 +554,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_2_variable_E_c:
+    for conf in config_combined_2[:2]:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_fit_psd_eff:
