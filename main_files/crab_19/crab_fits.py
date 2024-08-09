@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath('./main_files'))
 
 import numpy as np
-from MultinestClusterFit_with_psd_eff import MultinestClusterFit
+from MultinestClusterFit import MultinestClusterFit
 from RebinningFunctions import spimodfit_binning_SE, log_binning_function_for_x_number_of_bins, no_rebinning #, rebin_data_exp_50
 from PointingClusters import *
 from ModelSources import *
@@ -175,8 +175,10 @@ def crab_band_fit(
 config_2003 = [
     {
         "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
-        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit",
+        "fit_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/fit_2003/crab_band_fit_test",
+        "new_pointing_clustering": False,
         "energy_range": (20, 600),
+        "binning_func": log_binning_function_for_x_number_of_bins(30),
     }, 
     {
         "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003",
@@ -497,7 +499,7 @@ if __name__ == "__main__":
     # for conf in config_fit_psd_eff:
     #     crab_band_fit_wide_energy(**conf)
     #     print(conf['fit_path'] + " done")
-    crab_band_fit_wide_energy(**config_fit_psd_eff[2])
+    crab_band_fit(**config_2003[0])
     # parameter_names = config_fit_psd_eff[0]['parameters']
     # cc = ChainConsumer()
     # chain = np.loadtxt('./chains/1-post_equal_weights.dat')
