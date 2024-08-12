@@ -382,7 +382,7 @@ config_beuermann_with_data_2 = [
         'new_pointing_clustering': False,
         "energy_range": (20,1000),
         "crab_model": crab_beuermann,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2" "A 0535 262 K", "A 0535 262 index"]
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2", "A 0535 262 K", "A 0535 262 index"]
     },
     {
         "data_path": "./main_files/crab_19/data_2_2017_comb",
@@ -390,7 +390,7 @@ config_beuermann_with_data_2 = [
         'new_pointing_clustering': False,
         "energy_range": (20,1000),
         "crab_model": crab_beuermann,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2" "A 0535 262 K", "A 0535 262 index"]
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2", "A 0535 262 K", "A 0535 262 index"]
     },
 ]
 
