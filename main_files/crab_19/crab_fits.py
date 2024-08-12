@@ -394,6 +394,25 @@ config_beuermann_with_data_2 = [
     },
 ]
 
+config_band_free_Ec_data_2 = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_free_E_c_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_band_free_E_c,
+        "p": ["Crab K", "Crab alpha","Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_free_E_c_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_band_free_E_c,
+        "p": ["Crab K", "Crab alpha","Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+    },
+]
+
 config_2_variable_E_c = [
     {
         "data_path": "./main_files/crab_19/data_2_2003_comb",
@@ -550,19 +569,42 @@ config_fit_psd_eff = [
 broken_pl_low_energy = [
     {
         "data_path": "./main_files/crab_19/data_2003_center",
-        "fit_path": "./main_files/crab_19/fit_2003_broken_pl/crab_fit",
+        "fit_path": "./main_files/crab_19/fit_2003_broken_pl/crab_fit_20_150",
         'new_pointing_clustering': False,
-        "energy_range": (20,100),
+        "energy_range": (20,150),
         "just_crab": True,
         "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta"],
     }, 
     {
         "data_path": "./main_files/crab_19/data_2017_center",
-        "fit_path": "./main_files/crab_19/fit_2017_broken_pl/crab_fit",
-        'new_pointing_clustering': True,
-        "energy_range": (20,100),
+        "fit_path": "./main_files/crab_19/fit_2017_broken_pl/crab_fit_20_150",
+        'new_pointing_clustering': False,
+        "energy_range": (20,150),
         "just_crab": True,
         "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta"],
+    }, 
+]
+
+config_crab_pl_high_energy = [
+    {
+        "data_path": "./main_files/crab_19/TBD",
+        "fit_path": "./main_files/crab_19/fit_2003_high_e/crab_fit_1_8",
+        'new_pointing_clustering': True,
+        "energy_range": (1000,8000),
+        "just_crab": False,
+        "crab_model": crab_pl_high_energy,
+        "p": ["Crab K", "Crab index"],
+    }, 
+    {
+        "data_path": "./main_files/crab_19/TBD",
+        "fit_path": "./main_files/crab_19/fit_2017_high_e/crab_fit_1_8",
+        'new_pointing_clustering': True,
+        "energy_range": (1000,8000),
+        "just_crab": False,
+        "crab_model": crab_pl_high_energy,
+        "p": ["Crab K", "Crab index"],
     }, 
 ]
 
@@ -574,6 +616,12 @@ if __name__ == "__main__":
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
     for conf in config_beuermann_with_data_2:
+        crab_band_fit_wide_energy(**conf)
+        print(conf['fit_path'] + " done")
+    for conf in config_band_free_Ec_data_2:
+        crab_band_fit_wide_energy(**conf)
+        print(conf['fit_path'] + " done")
+    for conf in broken_pl_low_energy:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_fit_psd_eff:

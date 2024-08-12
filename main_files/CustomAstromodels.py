@@ -131,7 +131,7 @@ class Beuermann(Function1D, metaclass=FunctionMeta):
 
         Beuermann function. similar to the band function but with a parameter that controls the smoothness of the transition between the two power laws independently of the slopes.
 
-    latex : TBD
+    latex : K \left( \left( \frac{x}{E_{\mathrm{1}}} \right) ^ {- \alpha n} + \left( \frac{x}{E_{\mathrm{2}}} \right) ^ {- \beta n} \right) ^ {-\frac{1}{n}}
 
     parameters :
 

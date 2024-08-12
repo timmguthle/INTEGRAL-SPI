@@ -95,8 +95,21 @@ def crab_broken_powerlaw(model, piv=100):
     pl.beta.prior = Uniform_prior(lower_bound=-3., upper_bound=-1.6)
     pl.xb = 50.
     pl.xb.free = True
-    pl.xb.prior = Uniform_prior(lower_bound=20 , upper_bound=100)
+    pl.xb.prior = Uniform_prior(lower_bound=20 , upper_bound=150)
     component1 = SpectralComponent("br_pl", shape=pl)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    
+    model.add_source(ps)
+    return model
+
+def crab_pl_high_energy(model, piv=100):
+    ra, dec = 83.6333, 22.0144
+    
+    pl = Powerlaw()
+    pl.piv = piv
+    pl.K.prior = Log_uniform_prior(lower_bound=5e-6, upper_bound=1e-4)
+    pl.index.prior = Uniform_prior(lower_bound=-3, upper_bound=-1.8)
+    component1 = SpectralComponent("pl", shape=pl)
     ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
     
     model.add_source(ps)
@@ -170,10 +183,10 @@ def crab_band_free_E_c(model, piv=100):
     s.beta.max_value = -2.1
     s.beta = -2.25
     s.xp = 500
-    s.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-3)
+    s.K.prior = Log_uniform_prior(lower_bound=2e-4, upper_bound=1e-3)
     s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-1.7)
     s.beta.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-2.1)
-    s.xp.prior = Uniform_prior(lower_bound=300, upper_bound=1000)
+    s.xp.prior = Uniform_prior(lower_bound=20, upper_bound=1000)
     s.xp.free = True
     component1 = SpectralComponent("band", shape=s)
     ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
