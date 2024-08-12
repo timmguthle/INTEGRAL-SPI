@@ -3,6 +3,8 @@ sys.path.insert(0, os.path.abspath('./main_files'))
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+from matplotlib.legend_handler import HandlerBase
 import ligo.skymap.plot
 
 
@@ -33,24 +35,39 @@ def read_summary_file(fit_base_path):
                 K.append(float(line.split()[1]))
     return ra, dec, K
 
-def plot_result(fit_base_path):
+def plot_result(fit_base_path, galactic=True):
     ra, dec, K = read_summary_file(fit_base_path)
 
-    fig, ax = plt.subplots(figsize=(5,4), subplot_kw={'projection': 'galactic degrees zoom', 'center': '312deg -76deg', 'radius': '8deg'})
+    class HandlerMarker(HandlerBase):
+        def create_artists(self, legend, orig_handle, xdescent, ydescent, width, height, fontsize, trans):
+            markerline = plt.Line2D([width / 2], [height / 2], ls="", marker=ligo.skymap.plot.reticle(), markersize=10, markeredgewidth=3, 
+                                    color=orig_handle.get_color(), transform=trans)
+            return [markerline]
+
+    if galactic:
+        fig, ax = plt.subplots(figsize=(6,5), subplot_kw={'projection': 'galactic degrees zoom', 'center': '312deg -76deg', 'radius': '8deg'})
+    else:
+        fig, ax = plt.subplots(figsize=(6,5), subplot_kw={'projection': 'astro degrees zoom', 'center': '10deg -40deg', 'radius': '8
+                                                          deg'})
+
+
 
     pos = ax.scatter(ra, dec, c=K,transform=ax.get_transform('fk5'), cmap="viridis", s=15)
     ax.grid()
 
-    ax.plot(
+    crab_marker, = ax.plot(
             10, -40,
             transform=ax.get_transform('fk5'),
             marker=ligo.skymap.plot.reticle(),
             markersize=10,
-            markeredgewidth=2,
-            c="tab:orange")
+            markeredgewidth=3,
+            c="tab:orange", 
+            label="center")
+    
+    ax.legend(handler_map={crab_marker: HandlerMarker()})
 
     fig.colorbar(pos, ax=ax, label="K")
-    fig.savefig(f"{fit_base_path}/search_result.png")
+    fig.savefig(f"{fit_base_path}/search_result.pdf")
 
 
 def plot_positions(positions, galactic=True, fit_base_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2"):
@@ -79,5 +96,5 @@ def sweep_search_3():
 
 if __name__ == "__main__":
     fit_base_path = "/home/tguethle/Documents/spi/Master_Thesis/main_files/no_source_bkg/sweep_search_2"
-    #plot_result(fit_base_path)
-    sweep_search_3()
+    plot_result(fit_base_path, galactic=False)
+    # sweep_search_3()

@@ -142,6 +142,24 @@ def crab_band(model, piv=100):
     model.add_source(ps)
     return model
 
+def crab_beuermann(model, piv=100):
+    ra, dec = 83.6333, 22.0144
+    
+    s = Beuermann()
+    # s.piv = piv no piv in the model
+    s.alpha = -2.0
+    s.beta = -2.25
+    s.K.prior = Log_uniform_prior(lower_bound=5e-5, upper_bound=1e-3)
+    s.alpha.prior = Uniform_prior(lower_bound=-4, upper_bound=-1.6)
+    s.beta.prior = Uniform_prior(lower_bound=-4, upper_bound=-1.6)
+    s.n.prior = Uniform_prior(lower_bound=0.1, upper_bound=10)
+    s.E1.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
+    s.E2.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
+    component1 = SpectralComponent("beuermann", shape=s)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    model.add_source(ps)
+    return model
+
 def crab_band_free_E_c(model, piv=100):
     ra, dec = 83.6333, 22.0144
     

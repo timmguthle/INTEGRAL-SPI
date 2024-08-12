@@ -13,9 +13,9 @@ Run this file to download the data from the afs with spiselect and copy it to th
 """
 
 energies = np.geomspace(40, 1200, 51, dtype=np.uint64) / 2
-energies2 = np.geomspace(40, 2000, 101, dtype=np.uint64) / 2
 E_bins_50 = list(energies)
 
+energies2 = np.geomspace(40, 2000, 101, dtype=np.uint64) / 2
 E_bins_100 = list(energies2)
 
 print(E_bins_100)

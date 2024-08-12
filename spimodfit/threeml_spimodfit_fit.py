@@ -1,12 +1,15 @@
+import sys, os
+
+sys.path.insert(0, os.path.abspath('./main_files'))
+
 from threeML import *
 from threeML.plugins.OGIPLike import OGIPLike
 import matplotlib.pyplot as plt
 import numpy as np
+from CustomAstromodels import C_Band
 import pickle
 from threeML.minimizer.minimization import FitFailed
-import sys, os
 
-sys.path.insert(0, os.path.abspath('./main_files'))
 
 
 def save_fit(val, cov, fit_path):
@@ -58,11 +61,83 @@ def generate_channel_options(nr_channles=41, min_size=6):
 
     return out
 
+def run_fit_band(
+            SE_path: str,
+            PE_path: str,
+            fit_path: str,
+            psd_eff: float,
+            save_figure=False, 
+            test_goodness=False, 
+            retrun_objects=False,
+            print_distance=True
+    ):
+    """
+    run the fit with the given channels and channel option. 
+    """
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
+
+    crab_SE = OGIPLike("crab_SE", observation=f'{SE_path}/spectra_Crab.fits', response=f'{SE_path}/spectral_response.rmf.fits')
+    crab_SE.set_active_measurements('35 - 514')
+
+    crab_PE = OGIPLike("crab_PE", observation=f'{PE_path}/spectra_Crab.fits', response=f'{PE_path}/spectral_response.rmf.fits')
+    crab_PE.set_active_measurements('514 - 1000')
+    crab_PE.fix_effective_area_correction(psd_eff)
+
+    ps_data = DataList(crab_SE, crab_PE)
+
+    spec = C_Band()
+
+    ps = PointSource('crab',l=0,b=0,spectral_shape=spec)
+
+    ps_model = Model(ps)
+
+    ps_model.crab.spectrum.main.C_Band.alpha.min_value = -2.1
+    ps_model.crab.spectrum.main.C_Band.alpha = -2.0
+
+    ps_model.crab.spectrum.main.C_Band.beta.max_value = -2.1
+    ps_model.crab.spectrum.main.C_Band.beta = -2.2
+
+    ps_model.crab.spectrum.main.C_Band.piv = 100
+    ps_model.crab.spectrum.main.C_Band.xp = 500
+    ps_model.crab.spectrum.main.C_Band.xp.fix = True
+
+    
+    ps_jl = JointLikelihood(ps_model, ps_data)
+
+    best_fit_parameters_ps, likelihood_values_ps = ps_jl.fit()
+
+    
+    ps_jl.restore_best_fit()
+
+    val = np.array(best_fit_parameters_ps["value"])
+    err = np.array(best_fit_parameters_ps["error"])
+    cor = ps_jl.correlation_matrix
+    cov = cor * err[:, np.newaxis] * err[np.newaxis, :]
+    logL = float(likelihood_values_ps.values[1])
+
+    if save_figure:
+        fig = display_spectrum_model_counts(ps_jl, step=True)
+        fig.savefig(f'{fit_path}/sim_spource.pdf')
+        print(f'fit saved at {fit_path}/sim_spource.pdf')
+
+    if print_distance:
+        print(mahalanobis_dist(val, cov, dataset[2]))
+
+    if test_goodness:
+        test_goodness_of_fit(ps_jl)
+
+    if retrun_objects:
+        return s_1A, ps_jl
+
+    return val, cov, err, logL
+
 def run_fit(channels: list[str],
             dataset, 
             save_figure=False, 
             test_goodness=False, 
-            retrun_objects=False
+            retrun_objects=False,
+            print_distance=True
     ):
     """
     run the fit with the given channels and channel option. 
@@ -103,7 +178,8 @@ def run_fit(channels: list[str],
         fig.savefig(f'{fit_path}/sim_spource.pdf')
         print(f'fit saved at {fit_path}/sim_spource.pdf')
 
-    print(mahalanobis_dist(val, cov, dataset[2]))
+    if print_distance:
+        print(mahalanobis_dist(val, cov, dataset[2]))
 
     if test_goodness:
         test_goodness_of_fit(ps_jl)
@@ -112,6 +188,7 @@ def run_fit(channels: list[str],
         return s_1A, ps_jl
 
     return val, cov, err, logL
+
 
 
 def test_goodness_of_fit(joint_likelihood: JointLikelihood):

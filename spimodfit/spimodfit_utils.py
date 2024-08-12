@@ -228,7 +228,17 @@ class SpimodfitWrapper():
     source should either be False or catalog name (file must be in the cat directory)
 
     """
-    def __init__(self, name: str, revolutions: list, source=False, source_name="Crab", E_Bins=wide_E_Bins, convsky_output=True) -> None:
+    def __init__(
+            self,
+            name: str,
+            revolutions: list, 
+            source=False, 
+            source_name="Crab", 
+            E_Bins=wide_E_Bins, 
+            convsky_output=True, 
+            dataset: str = 'SE', 
+            center=False,
+            **kwargs) -> None:
         self.name = name # name of the parameter files and the generated directories. replaces "skymap43" in the template files
         self.spiselect_name = f'spiselectscw.dataset_{self.name}.par'
         self.background_name = f'background_model_{self.name}.pro'
@@ -242,7 +252,8 @@ class SpimodfitWrapper():
         self.background_template = "background_model_skymap43.pro"
         self.spimodfit_template = "spimodfit.fit_Crab_skymap43_noSource.par"
         self.threeML_template = "adjust4threeML_template.pro"
-        
+        self.dataset = dataset
+        self.center = center
         self.IRF_versions = self._generate_IRF_list()
         self.convsky_output = convsky_output
         self.define_bins(E_Bins)
@@ -276,12 +287,25 @@ class SpimodfitWrapper():
         lines[15] = lines[15].replace("43", f"{self.revolutions}"[1:-1])
         lines[16] = lines[16].replace("43", f"{self.revolutions}"[1:-1])
 
+        # choose the dataset to use. If SE, do nothing
+        if self.dataset == 'PE':
+            lines[111] = lines[111].replace("Private_low", "PSD/Private_low")
+
         if len(self.E_Bins) == 1161:
             lines[112] = f'energy_bins,s,h,"20-600 keV",,,"Energy bins selection"\n'
             lines[113] = f'energy_rebin,s,h,"0.5 keV",,,"Energy rebinning (must match bins)"\n'
         else:
             lines[112] = f'energy_bins,s,h,"{", ".join(self.Bins)} keV",,,"Energy bins selection"\n'
             lines[113] = f'energy_rebin,s,h,"{", ".join(self.Bins_diff)} keV",,,"Energy rebinning (must match bins)"\n'
+
+        # set the center of the data selection 
+        if self.center:
+            if self.center != 'crab':
+                lines[89] = f'select_PtgX_masks_chi_list_1,r,h,{self.center[0]:.2f},-180,180,"chi center of the mask 1 for X pointing"\n'
+                lines[90] = f'select_PtgX_masks_psi_list_1,r,h,{self.center[1]:.2f},-90,90,"psi center of the mask 1 for X pointing"\n'
+        else:
+            for i in range(86, 96):
+                lines[i] = "# " + lines[i]
 
         with open(self.spiselect_name, "w") as f:
             f.writelines(lines)
@@ -610,6 +634,8 @@ def download_and_copy_to_pyspi(name, rev, center: Union[bool, str, list]=False, 
 
 
 if __name__ == '__main__':
+
+    pass
     
     #get_data_from_pyspi(
     #    "374_100_bins_source", 
@@ -630,11 +656,11 @@ if __name__ == '__main__':
     # dl = SpimselectDownloader("374_center_small_bins", [374], center=[-48, -76], E_Bins=small_E_bins)
     # dl.adjust_for_pyspi()
     # dl.copy_to_pyspi(extension='_center_small_bins')
-    gen = SpimodfitWrapper('374_center', [374], E_Bins=normal_E_Bins)
+    #gen = SpimodfitWrapper('374_center', [374], E_Bins=normal_E_Bins)
     # gen.generate_scripts()
     # gen.run_background()
     # gen.run_spimodfit()
-    gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation)
+    #gen.plot_skymap_aitoff(radius='25deg', center=center_simulation, center_skymap=center_simulation)
     #downloader = SpimselectDownloader('374_real_bkg_para2', [374], center=False, E_Bins=normal_E_Bins)
     #downloader.generate_and_run()
     #downloader.adjust_for_spimodfit(source_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/spimodfit_comparison_sim_source/pyspi_real_bkg_Timm2_para2/")

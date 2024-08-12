@@ -20,6 +20,7 @@ def crab_band_fit_wide_energy(
         just_crab: bool = False,
         crab_model = crab_band,
         parameters = None,
+        p = ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
         **kwargs,
 ):
     """
@@ -42,7 +43,6 @@ def crab_band_fit_wide_energy(
                 (crab_model, (100,)),
                 (s_1A_0535_262_pl, (100,)),
         ))
-        p = ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
 
     assert data_path is not None, "data_path must be given"
     assert fit_path is not None, "fit_path must be given"
@@ -375,6 +375,25 @@ config_combined_2 = [
     }, 
 ]
 
+config_beuermann_with_data_2 = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2" "A 0535 262 K", "A 0535 262 index"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2" "A 0535 262 K", "A 0535 262 index"]
+    },
+]
+
 config_2_variable_E_c = [
     {
         "data_path": "./main_files/crab_19/data_2_2003_comb",
@@ -554,7 +573,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_combined_2[:2]:
+    for conf in config_beuermann_with_data_2:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_fit_psd_eff:
