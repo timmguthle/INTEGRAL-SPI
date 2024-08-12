@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.abspath('./main_files'))
 
 import numpy as np
 from astromodels import Powerlaw, Broken_powerlaw, SmoothlyBrokenPowerLaw, Line, Log_uniform_prior, Uniform_prior, PointSource, SpectralComponent, Model
-from CustomAstromodels import C_Band
+from CustomAstromodels import C_Band, Beuermann
 
 def define_sources(source_funcs):    
     model = Model()
