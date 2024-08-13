@@ -168,15 +168,36 @@ def get_data_and_combine_20_1000():
 
 
 if __name__ == '__main__':
+    normal_E_Bins_HE = [2000.0, 2378.0, 2828.0, 3363.0, 4000.0, 4756.0, 5656.0, 6727.0, 8000.0]
 
 
-    get_data_and_combine_20_1000()
+    # get_data_and_combine_20_1000()
 
 
 
     # combine_datasets_corrected('./main_files/crab_19/data_2003_center',
     #                  './main_files/crab_19/data_2003_PE',
     #                  './main_files/crab_19/data_2003_test', 0.88)
+
+    download_and_copy_to_pyspi(
+        "data_HE_2003", 
+        rev=[43, 44, 45],
+        E_Bins=normal_E_Bins_HE,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        "data_HE_2017", 
+        rev=[43, 44, 45],
+        E_Bins=normal_E_Bins_HE,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
+        dataset='HE'
+    )
 
 
 # download_and_copy_to_pyspi(

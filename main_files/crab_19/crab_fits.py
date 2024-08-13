@@ -570,18 +570,18 @@ config_fit_psd_eff = [
 
 broken_pl_low_energy = [
     {
-        "data_path": "./main_files/crab_19/data_3_2003_center",
-        "fit_path": "./main_files/crab_19/fit_2003_broken_pl/crab_fit_20_150",
-        'new_pointing_clustering': False,
+        "data_path": "main_files/crab_19/data_2_2003_center",
+        "fit_path": "main_files/crab_19/fit_2003_broken_pl/crab_fit_20_150",
+        'new_pointing_clustering': True,
         "energy_range": (20,150),
         "just_crab": True,
         "crab_model": crab_broken_powerlaw,
         "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta"],
     }, 
     {
-        "data_path": "./main_files/crab_19/data_3_2017_center",
-        "fit_path": "./main_files/crab_19/fit_2017_broken_pl/crab_fit_20_150",
-        'new_pointing_clustering': False,
+        "data_path": "main_files/crab_19/data_2_2017_center",
+        "fit_path": "main_files/crab_19/fit_2017_broken_pl/crab_fit_20_150",
+        'new_pointing_clustering': True,
         "energy_range": (20,150),
         "just_crab": True,
         "crab_model": crab_broken_powerlaw,

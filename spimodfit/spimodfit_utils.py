@@ -17,6 +17,7 @@ from typing import Union
 
 
 normal_E_Bins = [20.0, 21.5, 23.5, 25.5, 27.5, 30.0, 32.5, 35.5, 38.5, 42.0, 45.5, 49.5, 54.0, 58.5, 63.5, 69.0, 75.0, 81.5, 89.0, 96.5, 105.0, 114.0, 124.0, 134.5, 146.0, 159.0, 172.5, 187.5, 204.0, 221.5, 240.5, 261.5, 284.0, 308.5, 335.5, 364.5, 396.0, 430.0, 467.5, 508.0, 514, 600]
+normal_E_Bins_HE = [2000.0, 2378.0, 2828.0, 3363.0, 4000.0, 4756.0, 5656.0, 6727.0, 8000.0]
 wide_E_Bins = [20, 29, 43, 62, 91, 132, 193, 282, 411, 600]
 energies = np.geomspace(40, 1200, 201, dtype=np.uint64) / 2
 small_E_bins = list(np.arange(20, 600.5, 0.5))
@@ -58,7 +59,7 @@ class SpimselectDownloader():
         self.dataset = dataset
 
         assert center == 'crab' or center == False or len(center) == 2, "center must be either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates."
-        assert dataset in ['SE', 'PE'], "dataset must be either 'SE' or 'PE'"
+        assert dataset in ['SE', 'PE', "HE"], "dataset must be either 'SE' or 'PE' or 'HE'"
 
         os.chdir(self.base_dir)
 
@@ -101,6 +102,8 @@ class SpimselectDownloader():
         # choose the dataset to use. If SE, do nothing
         if self.dataset == 'PE':
             lines[111] = lines[111].replace("Private_low", "PSD/Private_low")
+        elif self.dataset == 'HE':
+            lines[111] = lines[111].replace("Private_low", "Private_high")
 
         if len(self.E_Bins) == 1161:
             lines[112] = f'energy_bins,s,h,"20-600 keV",,,"Energy bins selection"\n'
