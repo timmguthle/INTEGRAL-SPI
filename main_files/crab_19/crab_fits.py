@@ -37,7 +37,7 @@ def crab_band_fit_wide_energy(
         source_model = define_sources((
             (crab_model, (100,)),
         ))
-        p  = ["Crab K", "Crab alpha", "Crab beta"]
+
     else:
         source_model = define_sources((
                 (crab_model, (100,)),
@@ -382,7 +382,8 @@ config_beuermann_with_data_2 = [
         'new_pointing_clustering': False,
         "energy_range": (20,1000),
         "crab_model": crab_beuermann,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2", "A 0535 262 K", "A 0535 262 index"]
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
     },
     {
         "data_path": "./main_files/crab_19/data_2_2017_comb",
@@ -390,7 +391,8 @@ config_beuermann_with_data_2 = [
         'new_pointing_clustering': False,
         "energy_range": (20,1000),
         "crab_model": crab_beuermann,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2", "A 0535 262 K", "A 0535 262 index"]
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
     },
 ]
 
@@ -618,12 +620,12 @@ if __name__ == "__main__":
     for conf in config_beuermann_with_data_2:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
-    for conf in config_band_free_Ec_data_2:
-        crab_band_fit_wide_energy(**conf)
-        print(conf['fit_path'] + " done")
-    for conf in broken_pl_low_energy:
-        crab_band_fit_wide_energy(**conf)
-        print(conf['fit_path'] + " done")
+    # for conf in config_band_free_Ec_data_2:
+    #     crab_band_fit_wide_energy(**conf)
+    #     print(conf['fit_path'] + " done")
+    # for conf in broken_pl_low_energy:
+    #     crab_band_fit_wide_energy(**conf)
+    #     print(conf['fit_path'] + " done")
     # for conf in config_fit_psd_eff:
     #     crab_band_fit_wide_energy(**conf)
     #     print(conf['fit_path'] + " done")
