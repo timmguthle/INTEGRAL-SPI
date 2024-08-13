@@ -195,8 +195,7 @@ class Beuermann(Function1D, metaclass=FunctionMeta):
         # if alpha < beta:
         #     raise ModelAssertionViolation("Alpha cannot be less than beta")
 
-        print(K, alpha, beta, n, E1, E2)
-
+       
         if isinstance(x, astropy_units.Quantity):
             alpha_ = alpha.value
             beta_ = beta.value
