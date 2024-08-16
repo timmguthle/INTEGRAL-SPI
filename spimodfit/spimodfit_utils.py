@@ -131,6 +131,7 @@ class SpimselectDownloader():
     def adjust_for_pyspi(self):
         """
         change dead_time.fits, evts_det_spec.fits
+        #TODO fix for case that bins are not the same
         
         """
         # generate a new directory for the dataset and copy pointings and energy_boundries
@@ -146,6 +147,8 @@ class SpimselectDownloader():
             # update e bins
 
             hdul.writeto("spi2/energy_boundaries.fits")
+            t = Table.read(hdul[1])
+            nr_e_bins_from_file = len(t)
 
 
         # change the format of the dead_time.fits and evts_det_spec.fits file
@@ -158,6 +161,10 @@ class SpimselectDownloader():
             hdul[1].data = Table.as_array(t)
             assert hdul[1].data.shape[0] == 85*nr_pointings, "wrong shape of dead_time.fits process failed"
             hdul.writeto("spi2/dead_time.fits")
+
+        if self.nr_E_bins != nr_e_bins_from_file:
+            print(f'{Fore.RED}WARNING: number of energy bins does not match. Using bins from energy boundaries instead.{Style.RESET_ALL}')
+            self.nr_E_bins = nr_e_bins_from_file
 
 
         all_zeros = (np.zeros(self.nr_E_bins, dtype=np.uint32), np.zeros(self.nr_E_bins, dtype=np.float32))
@@ -180,6 +187,7 @@ class SpimselectDownloader():
     def copy_to_pyspi(self, path="/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/", extension='', use_rev_name=True):
         """
         copy the dataset to the pyspi directory
+ 
         """
         if use_rev_name:
             compleate_path = f'{path}{self.revolutions[0]:04}{extension}/'

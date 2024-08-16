@@ -6,6 +6,7 @@ import numpy as np
 from astropy.io import fits
 from astropy.table import Table
 import astropy.time as at
+from colorama import Fore, Style
 from datetime import datetime
 
 """
@@ -18,7 +19,6 @@ E_bins_50 = list(energies)
 energies2 = np.geomspace(40, 2000, 101, dtype=np.uint64) / 2
 E_bins_100 = list(energies2)
 
-print(E_bins_100)
 
 def extract_meta_data(data_path):
     with fits.open(f"{data_path}/pointing.fits") as file:
@@ -115,6 +115,57 @@ def combine_datasets_corrected(path_SE: str, path_PE:str, new_path:str, psd_eff:
             hdul_1.writeto(f"{new_path}/evts_det_spec.fits", overwrite=True)
 
 
+def combine_datasets_PE_HE(path_PE:str, path_HE:str, new_path:str, psd_eff:float = 0.85, break_energy:int=2000):
+    """
+    Combines a HE and PE dataset into one by adding the counts of the HE dataset to the PE dataset and correcting the
+    livetime of the PE dataset.
+    """
+    data_HE = extract_meta_data(path_HE)
+    data_PE = extract_meta_data(path_PE)
+
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
+
+    assert len(data_HE[0]) == len(data_PE[0]), "Pointings do not match"
+    for i in range(len(data_HE[3])):
+        assert round(data_HE[3][i], 1) == round(data_PE[3][i], 1), f"live times do not match at index {i}"
+
+
+    # copy the meta data
+    with fits.open(f'{path_HE}/pointing.fits') as hdul:
+        hdul.writeto(f"{new_path}/pointing.fits", overwrite=True)
+
+    with fits.open(f'{path_HE}/dead_time.fits') as hdul:
+        hdul.writeto(f"{new_path}/dead_time.fits", overwrite=True)
+
+    with fits.open(f'{path_HE}/energy_boundaries.fits') as hdul:
+        hdul.writeto(f"{new_path}/energy_boundaries.fits", overwrite=True)
+
+    # combine the counts
+    with fits.open(f"{path_HE}/evts_det_spec.fits") as hdul_1:
+        with fits.open(f"{path_PE}/evts_det_spec.fits") as hdul_2:
+            counts_PE = hdul_2[1].data["COUNTS"]
+            counts_HE = hdul_1[1].data["COUNTS"]
+
+            if len(data_HE[2]) != len(data_PE[2]):
+                print(Fore.RED + "Warning: Energy bins do not match. Using zeros for missing bins " + Style.RESET_ALL)
+                counts_comb = np.pad(counts_PE, ((0, 0), (0, abs(len(data_HE[2]) - len(data_PE[2])))), mode='constant', constant_values=0) / psd_eff
+            else:
+                counts_comb = counts_PE / psd_eff
+
+            assert counts_comb.shape == counts_HE.shape, "Shape of combined counts does not match the shape of the HE counts"
+            # find the first bin, where the energy is bigger than the break energy
+            break_bin = np.where(data_HE[2] > break_energy)[0][0]
+
+            # replace counts above the break energy with the counts from the HE dataset
+            for i in range(break_bin - 1, len(data_PE[2])):
+                counts_comb[:,i] = counts_HE[:, i] 
+
+            hdul_1[1].data["COUNTS"] = counts_comb
+
+            hdul_1.writeto(f"{new_path}/evts_det_spec.fits", overwrite=True)
+
+
 def get_data_and_combine_20_1000():
     download_and_copy_to_pyspi(
         'data_3_2003_center',
@@ -165,11 +216,93 @@ def get_data_and_combine_20_1000():
         './main_files/crab_19/data_3_2017_PE',
         './main_files/crab_19/data_3_2017_comb', 0.85)
     
+def get_HE_PE_and_combine():
+    # download_and_copy_to_pyspi(
+    #     "data_HE_2003", 
+    #     rev=[43, 44, 45],
+    #     E_Bins=e_bins_1_8_MeV,
+    #     center='crab',
+    #     use_rev_name=False,
+    #     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
+    #     dataset='HE'
+    # )
+
+    # download_and_copy_to_pyspi(
+    #     "data_PE_2003", 
+    #     rev=[43, 44, 45],
+    #     E_Bins=e_bins_1_8_MeV,
+    #     center='crab',
+    #     use_rev_name=False,
+    #     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2003',
+    #     dataset='PE'
+    # )
+
+
+    download_and_copy_to_pyspi(
+        "data_HE_2017", 
+        rev=[1856, 1857, 1927, 1928],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        "data_PE_2017", 
+        rev=[1856, 1857, 1927, 1928],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2017',
+        dataset='PE'
+    )
+
+    download_and_copy_to_pyspi(
+        "data_HE_2016",
+        rev=[1657,1658, 1661, 1662, 1664],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2016',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        "data_PE_2016",
+        rev=[1657,1658, 1661, 1662, 1664],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2016',
+        dataset='PE'
+    )
+
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2003',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2003_high_comb',
+    )
+
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2016',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2016',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2016_high_comb',
+    )
+
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2017',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_high_comb',
+    )
 
 
 if __name__ == '__main__':
     normal_E_Bins_HE = [2000.0, 2378.0, 2828.0, 3363.0, 4000.0, 4756.0, 5656.0, 6727.0, 8000.0]
+    energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
+    e_bins_1_8_MeV = list(energies_1_8_MeV)
 
+    get_HE_PE_and_combine()
 
     # get_data_and_combine_20_1000()
 
@@ -179,26 +312,7 @@ if __name__ == '__main__':
     #                  './main_files/crab_19/data_2003_PE',
     #                  './main_files/crab_19/data_2003_test', 0.88)
 
-    download_and_copy_to_pyspi(
-        "data_HE_2003", 
-        rev=[43, 44, 45],
-        E_Bins=normal_E_Bins_HE,
-        center='crab',
-        use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
-        dataset='HE'
-    )
-
-    download_and_copy_to_pyspi(
-        "data_HE_2017", 
-        rev=[43, 44, 45],
-        E_Bins=normal_E_Bins_HE,
-        center='crab',
-        use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
-        dataset='HE'
-    )
-
+    
 
 # download_and_copy_to_pyspi(
 #     'data_2003_center',

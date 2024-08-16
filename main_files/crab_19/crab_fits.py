@@ -593,7 +593,7 @@ config_crab_pl_high_energy = [
     {
         "data_path": "./main_files/crab_19/data_HE_2003",
         "fit_path": "./main_files/crab_19/fit_2003_high_e/crab_fit_1_8",
-        'new_pointing_clustering': False,
+        'new_pointing_clustering': True,
         "energy_range": (1000,8000),
         "just_crab": False,
         "crab_model": crab_pl_high_energy,
@@ -602,7 +602,7 @@ config_crab_pl_high_energy = [
     {
         "data_path": "./main_files/crab_19/data_HE_2017",
         "fit_path": "./main_files/crab_19/fit_2017_high_e/crab_fit_1_8",
-        'new_pointing_clustering': False,
+        'new_pointing_clustering': True,
         "energy_range": (1000,8000),
         "just_crab": False,
         "crab_model": crab_pl_high_energy,
