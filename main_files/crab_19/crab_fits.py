@@ -593,7 +593,7 @@ config_crab_pl_high_energy = [
     {
         "data_path": "./main_files/crab_19/data_HE_2003",
         "fit_path": "./main_files/crab_19/fit_2003_high_e/crab_fit_1_8",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (1000,8000),
         "just_crab": False,
         "crab_model": crab_pl_high_energy,
@@ -602,7 +602,7 @@ config_crab_pl_high_energy = [
     {
         "data_path": "./main_files/crab_19/data_HE_2017",
         "fit_path": "./main_files/crab_19/fit_2017_high_e/crab_fit_1_8",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (1000,8000),
         "just_crab": False,
         "crab_model": crab_pl_high_energy,
@@ -617,10 +617,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-<<<<<<< HEAD
-=======
-    for conf in config_crab_pl_high_energy:
->>>>>>> d9306f36708c09e20d8901a4a5825fa35988b30f
+    for conf in config_crab_pl_high_energy[1:]:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
