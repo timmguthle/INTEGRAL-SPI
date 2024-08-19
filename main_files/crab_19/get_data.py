@@ -216,26 +216,81 @@ def get_data_and_combine_20_1000():
         './main_files/crab_19/data_3_2017_PE',
         './main_files/crab_19/data_3_2017_comb', 0.85)
     
-def get_HE_PE_and_combine():
-    # download_and_copy_to_pyspi(
-    #     "data_HE_2003", 
-    #     rev=[43, 44, 45],
-    #     E_Bins=e_bins_1_8_MeV,
-    #     center='crab',
-    #     use_rev_name=False,
-    #     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
-    #     dataset='HE'
-    # )
 
-    # download_and_copy_to_pyspi(
-    #     "data_PE_2003", 
-    #     rev=[43, 44, 45],
-    #     E_Bins=e_bins_1_8_MeV,
-    #     center='crab',
-    #     use_rev_name=False,
-    #     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2003',
-    #     dataset='PE'
-    # )
+def get_big_dataset():
+    
+    download_and_copy_to_pyspi(
+        'data_HE_2018',
+        rev=[1921, 1925, 1927, 1930, 1996, 1999, 2000, 2058, 2062, 2063, 2066],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_HE_2018',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        'data_PE_2018',
+        rev=[1921, 1925, 1927, 1930, 1996, 1999, 2000, 2058, 2062, 2063, 2066],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_PE_2018',
+        dataset='PE'
+    )
+
+    download_and_copy_to_pyspi(
+        'data_HE_2016_17',
+        rev=[1657, 1658, 1661, 1662, 1664, 1781, 1784, 1785, 1789],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_HE_2016_17',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        'data_PE_2016_17',
+        rev=[1657, 1658, 1661, 1662, 1664, 1781, 1784, 1785, 1789],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_PE_2016_17',
+        dataset='PE'
+    )
+
+    combine_datasets_PE_HE(
+        './main_files/crab_19/data_PE_2018',
+        './main_files/crab_19/data_HE_2018',
+        './main_files/crab_19/data_2018_high_comb',
+    )
+
+    combine_datasets_PE_HE(
+        './main_files/crab_19/data_PE_2016_17',
+        './main_files/crab_19/data_HE_2016_17',
+        './main_files/crab_19/data_2016_17_high_comb',
+    )
+
+def get_HE_PE_and_combine():
+    download_and_copy_to_pyspi(
+        "data_HE_2003", 
+        rev=[43, 44, 45],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2003',
+        dataset='HE'
+    )
+
+    download_and_copy_to_pyspi(
+        "data_PE_2003", 
+        rev=[43, 44, 45],
+        E_Bins=e_bins_1_8_MeV,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2003',
+        dataset='PE'
+    )
 
 
     download_and_copy_to_pyspi(
@@ -302,20 +357,23 @@ if __name__ == '__main__':
     energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
     e_bins_1_8_MeV = list(energies_1_8_MeV)
 
-    # get_HE_PE_and_combine()
+    energies_1_8_MeV_fewer = np.geomspace(2000, 16000, 8, dtype=np.uint64) / 2
+    e_bins_1_8_MeV_fewer = list(energies_1_8_MeV_fewer)
+
+    get_big_dataset()
 
     #################################TESTING#################################
-    combine_datasets_PE_HE(
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2016',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2016',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2016_high_comb',
-    )
+    # combine_datasets_PE_HE(
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2016',
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2016',
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2016_high_comb',
+    # )
 
-    combine_datasets_PE_HE(
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2017',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
-        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_high_comb',
-    )
+    # combine_datasets_PE_HE(
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2017',
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
+    #     '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_high_comb',
+    # )
 
     # get_data_and_combine_20_1000()
 
