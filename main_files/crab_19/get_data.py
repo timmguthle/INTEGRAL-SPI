@@ -158,7 +158,7 @@ def combine_datasets_PE_HE(path_PE:str, path_HE:str, new_path:str, psd_eff:float
             break_bin = np.where(data_HE[2] > break_energy)[0][0]
 
             # replace counts above the break energy with the counts from the HE dataset
-            for i in range(break_bin - 1, len(data_PE[2])):
+            for i in range(break_bin - 1, len(data_HE[2]) - 1):
                 counts_comb[:,i] = counts_HE[:, i] 
 
             hdul_1[1].data["COUNTS"] = counts_comb
@@ -302,7 +302,20 @@ if __name__ == '__main__':
     energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
     e_bins_1_8_MeV = list(energies_1_8_MeV)
 
-    get_HE_PE_and_combine()
+    # get_HE_PE_and_combine()
+
+    #################################TESTING#################################
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2016',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2016',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2016_high_comb',
+    )
+
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_2017',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_2017',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_2017_high_comb',
+    )
 
     # get_data_and_combine_20_1000()
 
