@@ -570,16 +570,16 @@ config_fit_psd_eff = [
 
 broken_pl_low_energy = [
     {
-        "data_path": "main_files/crab_19/data_2_2003_center",
+        "data_path": "main_files/crab_19/data_3_2003_center",
         "fit_path": "main_files/crab_19/fit_2003_broken_pl/crab_fit_20_150",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (20,150),
         "just_crab": True,
         "crab_model": crab_broken_powerlaw,
         "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta"],
     }, 
     {
-        "data_path": "main_files/crab_19/data_2_2017_center",
+        "data_path": "main_files/crab_19/data_3_2017_center",
         "fit_path": "main_files/crab_19/fit_2017_broken_pl/crab_fit_20_150",
         'new_pointing_clustering': True,
         "energy_range": (20,150),
@@ -614,9 +614,9 @@ config_crab_pl_1_8_MeV = [
     {
         "data_path": "./main_files/crab_19/data_2003_high_comb",
         "fit_path": "./main_files/crab_19/fit_2003_high_e/crab_fit_1_8_comb",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (1000,8000),
-        "just_crab": False,
+        "just_crab": True,
         "crab_model": crab_pl_high_energy,
         "p": ["Crab K", "Crab index"],
     }, 
@@ -647,7 +647,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_crab_pl_1_8_MeV:
+    for conf in broken_pl_low_energy:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
