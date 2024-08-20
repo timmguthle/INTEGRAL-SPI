@@ -302,11 +302,21 @@ if __name__ == '__main__':
     energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
     e_bins_1_8_MeV = list(energies_1_8_MeV)
 
-    get_HE_PE_and_combine()
+    bin_low_E = list(np.geomspace(40, 200, 31, dtype=np.uint64) / 2)
+    print(bin_low_E)
+    # get_HE_PE_and_combine()
 
     # get_data_and_combine_20_1000()
 
-
+    download_and_copy_to_pyspi(
+        "data_SE_2003_low_energy", 
+        rev=[43, 44, 45],
+        E_Bins=bin_low_E,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_SE_2003_low_energy',
+        dataset='SE'
+    )
 
     # combine_datasets_corrected('./main_files/crab_19/data_2003_center',
     #                  './main_files/crab_19/data_2003_PE',
