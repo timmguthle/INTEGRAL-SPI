@@ -271,6 +271,35 @@ def get_big_dataset():
         './main_files/crab_19/data_2016_17_high_comb',
     )
 
+def get_giant_dataset():
+    # take all the data from oktober 2014 to february 2019
+    download_and_copy_to_pyspi(
+        'data_PE_giant',
+        rev=[1461,1462,1466,1468,1516,1520,1528,1593,1597,1598,1599,1657, 1658, 1661, 1662, 1664, 1781, 1784, 1785, 1789, 1820,1856,1857,1921, 1925, 1927, 1930, 1996, 1999, 2000, 2058, 2062, 2063, 2066],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_giant',
+        dataset='PE'
+    )
+
+    download_and_copy_to_pyspi(
+        'data_HE_giant',
+        rev=[1461,1462,1466,1468,1516,1520,1528,1593,1597,1598,1599,1657, 1658, 1661, 1662, 1664, 1781, 1784, 1785, 1789, 1820,1856,1857,1921, 1925, 1927, 1930, 1996, 1999, 2000, 2058, 2062, 2063, 2066],
+        E_Bins=e_bins_1_8_MeV_fewer,
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_giant',
+        dataset='HE'
+    )
+
+    combine_datasets_PE_HE(
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_PE_giant',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_HE_giant',
+        '/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_giant_high_comb',
+    )
+
+
 def get_HE_PE_and_combine():
     download_and_copy_to_pyspi(
         "data_HE_2003", 
@@ -360,7 +389,7 @@ if __name__ == '__main__':
     energies_1_8_MeV_fewer = np.geomspace(2000, 16000, 8, dtype=np.uint64) / 2
     e_bins_1_8_MeV_fewer = list(energies_1_8_MeV_fewer)
 
-    get_big_dataset()
+    get_giant_dataset()
 
     #################################TESTING#################################
     # combine_datasets_PE_HE(
