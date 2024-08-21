@@ -733,3 +733,5 @@ if __name__ == "__main__":
 
     # summary = cc.analysis.get_summary(parameters=parameter_names)
     # print(summary)
+
+    #TODO: repeat the fit for config_band_free_Ec_data_2
