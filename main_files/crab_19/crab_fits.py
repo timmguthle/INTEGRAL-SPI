@@ -690,7 +690,7 @@ config_crab_pl_1_8_MeV_giant_dataset = [
     {
         "data_path": "./main_files/crab_19/data_giant_high_comb",
         "fit_path": "./main_files/crab_19/fit_giant/crab_fit_1_8_comb",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (1000,8000),
         "just_crab": False,
         "crab_model": crab_pl_high_energy,
