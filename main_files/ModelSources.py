@@ -183,8 +183,8 @@ def crab_band_free_E_c(model, piv=100):
     s.beta.max_value = -2.1
     s.beta = -2.25
     s.xp = 500
-    s.K.prior = Log_uniform_prior(lower_bound=2e-4, upper_bound=1e-3)
-    s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-1.7)
+    s.K.prior = Log_uniform_prior(lower_bound=2e-4, upper_bound=1e-2)
+    s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-1.5)
     s.beta.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-2.1)
     s.xp.prior = Uniform_prior(lower_bound=20, upper_bound=1000)
     s.xp.free = True
