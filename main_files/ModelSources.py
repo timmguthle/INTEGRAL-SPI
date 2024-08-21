@@ -107,8 +107,8 @@ def crab_pl_high_energy(model, piv=100):
     
     pl = Powerlaw()
     pl.piv = piv
-    pl.K.prior = Log_uniform_prior(lower_bound=5e-6, upper_bound=1e-4)
-    pl.index.prior = Uniform_prior(lower_bound=-3, upper_bound=-1.8)
+    pl.K.prior = Log_uniform_prior(lower_bound=5e-6, upper_bound=1e-2)
+    pl.index.prior = Uniform_prior(lower_bound=-3, upper_bound=-1.5)
     component1 = SpectralComponent("pl", shape=pl)
     ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
     

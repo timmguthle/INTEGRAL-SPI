@@ -645,10 +645,10 @@ config_nustar = [
 
         "data_path": "main_files/crab_19/data_SE_2003_low_energy",
         "fit_path": "main_files/crab_19/fit_2003_pl/crab_fit_20_78",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
         "energy_range": (20,78),
-        "just_crab": False,
-        "crab_model": crab_pl_high_energy,
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
         "p": ["Crab K", "Crab index"],
     },
     {
@@ -656,8 +656,8 @@ config_nustar = [
         "fit_path": "main_files/crab_19/fit_2017_pl/crab_fit_20_78",
         'new_pointing_clustering': False,
         "energy_range": (20,78),
-        "just_crab": False,
-        "crab_model": crab_pl_high_energy,
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
         "p": ["Crab K", "Crab index"],
     
     }
