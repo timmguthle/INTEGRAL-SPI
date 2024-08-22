@@ -413,6 +413,22 @@ config_band_free_Ec_data_2 = [
         "crab_model": crab_band_free_E_c,
         "p": ["Crab K", "Crab alpha","Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
     },
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_band_free_E_c_fit_35_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (35,1000),
+        "crab_model": crab_band_free_E_c,
+        "p": ["Crab K", "Crab alpha","Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_band_free_E_c_fit_35_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (35,1000),
+        "crab_model": crab_band_free_E_c,
+        "p": ["Crab K", "Crab alpha","Crab xp", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+    },
 ]
 
 config_2_variable_E_c = [
@@ -706,7 +722,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_band_free_Ec_data_2[1:]:
+    for conf in config_band_free_Ec_data_2[2:]:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:

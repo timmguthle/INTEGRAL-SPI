@@ -13,6 +13,9 @@ from threeML.minimizer.minimization import FitFailed
 
 
 def save_fit(val, cov, fit_path):
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
+
     with open(f"{fit_path}/source_parameters.pickle", "wb") as f:
         pickle.dump((val, cov),f)
 
@@ -69,7 +72,8 @@ def run_fit_band(
             save_figure=False, 
             test_goodness=False, 
             retrun_objects=False,
-            print_distance=True
+            print_distance=True,
+            fixed_break=True,
     ):
     """
     run the fit with the given channels and channel option. 
@@ -86,6 +90,11 @@ def run_fit_band(
 
     ps_data = DataList(crab_SE, crab_PE)
 
+    # crab_SE = OGIPLike("crab_SE", observation=f'{SE_path}/spectra_Crab.fits', response=f'{SE_path}/spectral_response.rmf.fits')
+    # crab_SE.set_active_measurements('35-600')
+
+    # ps_data = DataList(crab_SE)
+
     spec = C_Band()
 
     ps = PointSource('crab',l=0,b=0,spectral_shape=spec)
@@ -100,7 +109,7 @@ def run_fit_band(
 
     ps_model.crab.spectrum.main.C_Band.piv = 100
     ps_model.crab.spectrum.main.C_Band.xp = 500
-    ps_model.crab.spectrum.main.C_Band.xp.fix = True
+    ps_model.crab.spectrum.main.C_Band.xp.fix = fixed_break
 
     
     ps_jl = JointLikelihood(ps_model, ps_data)

@@ -89,9 +89,34 @@ def run_three_ml_combined(config):
         except RuntimeError:
             print(f"Fit failed for {c['name']}")
 
+
+
+def run_three_ml_combined_free_break(config):
+    l = len(config)
+    assert l % 2 == 0, "The number of datasets must be even"
+
+    for i in range(l//2):
+        c = config[i]
+        c_PE = config[l//2 + i]
+        fit_path = c['fit_path']
+        name = fit_path.split('/')[-2] + '_' + fit_path.split('/')[-1]
+        c['name'] = name
+        path_SE = f"{base_path}fit_Crab_{name}"
+        path_PE = f"{base_path}fit_Crab_{name}_PE"
+        
+        # make sure the programm does not crash if the fit fails, which is possible for bad spimodfit results
+        try:
+            (val, cov, err, logL) = tsf.run_fit_band(path_SE, path_PE, c['fit_path'] + '_spimodfit_free_break', c['psd_eff'], print_distance=False, save_figure=True, fixed_break=False) # type: ignore
+            tsf.save_fit(val, cov, c['fit_path'] + '_spimodfit_free_break')
+            p = ["Crab K", "Crab alpha","Crab xb", "Crab beta"]
+            np.savetxt(f"{c['fit_path'] + '_spimodfit_free_break'}/fit_val.txt", val, header=" ".join(p))
+            np.savetxt(f"{c['fit_path'] + '_spimodfit_free_break'}/fit_cov.txt", cov, header="cov matrix")
+        except RuntimeError:
+            print(f"Fit failed for {c['name']}")
+
 if __name__ == "__main__":
     # run_spimodfit(config_1)
-    run_three_ml_combined(config_1)
+    run_three_ml_combined_free_break(config_1)
 
 
     
