@@ -165,7 +165,10 @@ def crab_beuermann(model, piv=100):
     s.K.prior = Log_uniform_prior(lower_bound=5e-6, upper_bound=1e-3)
     s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-0.5)
     s.beta.prior = Uniform_prior(lower_bound=-4, upper_bound=-1.8)
-    s.n.prior = Uniform_prior(lower_bound=0.1, upper_bound=10)
+    
+    s.n.free = False
+    s.n = 3
+
     s.E1.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
     s.E2.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
     component1 = SpectralComponent("beuermann", shape=s)
