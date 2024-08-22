@@ -706,7 +706,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_crab_pl_1_8_MeV_giant_dataset:
+    for conf in config_band_free_Ec_data_2[1:]:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
@@ -734,4 +734,4 @@ if __name__ == "__main__":
     # summary = cc.analysis.get_summary(parameters=parameter_names)
     # print(summary)
 
-    #TODO: repeat the fit for config_band_free_Ec_data_2
+    #TODO: repeat the fit for cconfig_band_free_Ec_data_2onfig_band_free_Ec_data_2
