@@ -76,8 +76,10 @@ def crab_band_fit_wide_energy(
         folder=fit_path,
         parameter_names=parameters,
     )
-    
-    fit.parameter_fit_distribution()
+    try:
+        fit.parameter_fit_distribution()
+    except SyntaxError:
+        print('saving plot failed')
     fit.text_summaries(reference_values=False)
 
     # chainconsumer
@@ -722,7 +724,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_band_free_Ec_data_2[2:]:
+    for conf in config_band_free_Ec_data_2[3:]:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
