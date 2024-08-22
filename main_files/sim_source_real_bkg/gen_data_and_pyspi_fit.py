@@ -332,13 +332,13 @@ config = [
     },
     {
         'name': 'normal_new',
-        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374', # changed the path just to create a chain. Do not want to overwrite the data
+        "data_path": '/home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374-2', # changed the path just to create a chain. Do not want to overwrite the data
         "orig_data_path": '/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center',
         'rev': [374],
         "piv": 100,
         "scale_background": None,
         "K": 7e-4,
-        "fit_path_extension": "get_chain",
+        "fit_path_extension": "get_chain2",
         "new_pointings": True,
         "Energy_range": (20, 600),
         'center': [-48, -76]
@@ -532,4 +532,4 @@ if __name__ == "__main__":
 
     for c in config:
         if c['name'] == 'normal_new':
-            pyspi_fit_0374_pre_ppc(**c)
+            gen_and_fit(c)

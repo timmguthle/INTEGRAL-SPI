@@ -1,0 +1,7 @@
+Energy range: (20, 600)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374-2
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374-2/get_chain2
+Result: [ 7.00116112e-04 -1.99836630e+00]
+Covariance: [[2.97768505e-11 3.89012353e-08]
+ [3.89012353e-08 6.56839775e-05]]
+compleated at 2024-08-22 11:42:39.770417

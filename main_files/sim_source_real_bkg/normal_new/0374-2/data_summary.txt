@@ -1,0 +1,7 @@
+K: 0.0007
+piv: 100
+index: -2
+Scale Background: None
+Original Data Path: /home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center
+Data Path: /home/tguethle/Documents/spi/Master_Thesis/main_files/sim_source_real_bkg/normal_new/0374-2
+compleated at 2024-08-22 11:36:03.859574
