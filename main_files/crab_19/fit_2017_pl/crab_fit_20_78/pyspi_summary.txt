@@ -1,0 +1,7 @@
+Energy range: (20, 78)
+Data path: main_files/crab_19/data_2_2017_center
+Fit path: main_files/crab_19/fit_2017_pl/crab_fit_20_78
+Result: [ 7.63017972e-04 -1.95943983e+00]
+Covariance: [[3.35876254e-11 4.08967718e-08]
+ [4.08967718e-08 5.32823552e-05]]
+compleated at 2024-08-21 10:56:40.926899

@@ -609,7 +609,7 @@ config_fit_psd_eff = [
 
 broken_pl_low_energy = [
     {
-        "data_path": "main_files/crab_19/data_3_2003_center",
+        "data_path": "main_files/crab_19/data_3_2003_center", # that data is with 100 log bins from 20 to 1000
         "fit_path": "main_files/crab_19/fit_2003_broken_pl/crab_fit_20_150",
         'new_pointing_clustering': False,
         "energy_range": (20,150),
@@ -677,6 +677,29 @@ config_crab_pl_1_8_MeV = [
         "crab_model": crab_pl_high_energy,
         "p": ["Crab K", "Crab index"],
     }, 
+]
+
+config_nustar = [
+    {
+
+        "data_path": "main_files/crab_19/data_SE_2003_low_energy",
+        "fit_path": "main_files/crab_19/fit_2003_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2_2017_center",
+        "fit_path": "main_files/crab_19/fit_2017_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    
+    }
 ]
 
 config_crab_pl_1_8_MeV_fewer_bins_more_data = [
