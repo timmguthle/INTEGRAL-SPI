@@ -760,6 +760,29 @@ config_crab_pl_1_8_MeV_giant_dataset = [
 
 ]
 
+config_nustar = [
+    {
+
+        "data_path": "main_files/crab_19/data_SE_2003_low_energy",
+        "fit_path": "main_files/crab_19/fit_2003_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2_2017_center",
+        "fit_path": "main_files/crab_19/fit_2017_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    
+    }
+]
+
 if __name__ == "__main__":
     # for conf in config_2003[1:]:
     #     crab_band_fit(**conf)
@@ -767,7 +790,11 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
+<<<<<<< HEAD
     for conf in config_crab_pl_2_8_MeV_fewer_bins_more_data_just_crab:
+=======
+    for conf in config_nustar:
+>>>>>>> local_run
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
