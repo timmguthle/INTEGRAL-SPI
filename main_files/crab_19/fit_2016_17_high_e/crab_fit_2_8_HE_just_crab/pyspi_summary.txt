@@ -1,0 +1,7 @@
+Energy range: (2000, 8000)
+Data path: ./main_files/crab_19/data_HE_2016_17
+Fit path: ./main_files/crab_19/fit_2016_17_high_e/crab_fit_2_8_HE_just_crab
+Result: [ 5.31567003e-06 -1.82609249e+00]
+Covariance: [[8.33693782e-10 2.24088625e-06]
+ [2.24088625e-06 1.28870780e-01]]
+compleated at 2024-08-23 12:43:19.092962
