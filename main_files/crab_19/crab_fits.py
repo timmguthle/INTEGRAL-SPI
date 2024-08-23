@@ -725,6 +725,28 @@ config_crab_pl_1_8_MeV_fewer_bins_more_data_just_crab = [
 ]
 
 
+config_crab_pl_2_8_MeV_fewer_bins_more_data_just_crab = [
+    {
+        "data_path": "./main_files/crab_19/data_HE_2016_17",
+        "fit_path": "./main_files/crab_19/fit_2016_17_high_e/crab_fit_2_8_HE_just_crab",
+        'new_pointing_clustering': True,
+        "energy_range": (2000,8000),
+        "just_crab": True,
+        "crab_model": crab_pl_high_energy,
+        "p": ["Crab K", "Crab index"],
+    }, 
+    {
+        "data_path": "./main_files/crab_19/data_HE_2018",
+        "fit_path": "./main_files/crab_19/fit_2018_high_e/crab_fit_2_8_HE_just_crab",
+        'new_pointing_clustering': True,
+        "energy_range": (2000,8000),
+        "just_crab": True,
+        "crab_model": crab_pl_high_energy,
+        "p": ["Crab K", "Crab index"],
+    }, 
+
+]
+
 config_crab_pl_1_8_MeV_giant_dataset = [
     {
         "data_path": "./main_files/crab_19/data_giant_high_comb",
@@ -745,7 +767,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_beuermann_with_data_fixed_n:
+    for conf in config_crab_pl_2_8_MeV_fewer_bins_more_data_just_crab:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
