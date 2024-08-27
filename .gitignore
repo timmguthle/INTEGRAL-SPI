@@ -6,6 +6,9 @@ __pycache__
 
 main_files/crab_19/data_*
 
+error_test
+error_test_PE
+
 chains/*
 
 *.DS_Store
