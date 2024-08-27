@@ -24,6 +24,7 @@ def crab_band_fit_wide_energy(
         **kwargs,
 ):
     """
+    **Warning** Name ist Schall und Rauch.
     crab with band function. break energy fixed at 500keV. Beta is fixed at -2.25
     Pulsar as pl included. 
 
@@ -81,6 +82,8 @@ def crab_band_fit_wide_energy(
     except SyntaxError:
         print('saving plot failed')
     fit.text_summaries(reference_values=False)
+
+    fit.save_chain()
 
     # chainconsumer
     

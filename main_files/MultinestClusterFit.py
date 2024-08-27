@@ -787,6 +787,10 @@ class MultinestClusterFit:
         
         plt.savefig(f"{self._folder}/parameter_fit_distributions.pdf")
         plt.close()
+
+    def save_chain(self):
+        assert not self._folder is None, "folder is not set"
+        np.savetxt(f"{self._folder}/chain.dat", self._chain)
         
     def text_summaries(
         self,
