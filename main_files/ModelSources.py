@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.abspath('./main_files'))
 
 import numpy as np
 from astromodels import Powerlaw, Broken_powerlaw, SmoothlyBrokenPowerLaw, Line, Log_uniform_prior, Uniform_prior, PointSource, SpectralComponent, Model
-from CustomAstromodels import C_Band, Beuermann
+from CustomAstromodels import C_Band, Beuermann, Beuermann_same_E
 
 def define_sources(source_funcs):    
     model = Model()
@@ -176,6 +176,30 @@ def crab_beuermann(model, piv=100):
     model.add_source(ps)
     return model
 
+def crab_beuermann_same_E(model, piv=100):
+    """
+    Warning: to use this model, change the Beuermann class to have E1 and E2 as the same parameter.
+    """
+    ra, dec = 83.6333, 22.0144
+    
+    s = Beuermann_same_E()
+    # s.piv = piv no piv in the model
+    s.alpha = -1.9
+    s.beta = -2.25
+    s.K.prior = Log_uniform_prior(lower_bound=5e-6, upper_bound=1e-3)
+    s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-0.5)
+    s.beta.prior = Uniform_prior(lower_bound=-4, upper_bound=-1.8)
+    
+    s.n.free = True
+    s.n = 3
+
+    s.E1.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
+    s.E2.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
+    component1 = SpectralComponent("beuermann", shape=s)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    model.add_source(ps)
+    return model
+
 def crab_band_free_E_c(model, piv=100):
     ra, dec = 83.6333, 22.0144
     
@@ -256,7 +280,7 @@ def simulated_pl_0374(model, piv):
     
     pl = Powerlaw()
     pl.piv = piv
-    pl.K.prior = Log_uniform_prior(lower_bound=1e-6, upper_bound=1e0)
+    pl.K.prior = Log_uniform_prior(lower_bound=1e-8, upper_bound=1e0)
     pl.index.prior = Uniform_prior(lower_bound=-12, upper_bound=4)
     pl.index.min_value = -12.5
     component1 = SpectralComponent("pl", shape=pl)

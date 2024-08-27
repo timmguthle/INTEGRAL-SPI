@@ -1,0 +1,7 @@
+Energy range: (40, 600)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_data_normal_new_big_K/
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_data_normal_new_big_K//test_fit_wo_low_energy
+Result: [ 0.99999969 -2.03373851]
+Covariance: [[5.67511290e-17 7.08369642e-14]
+ [7.08369642e-14 3.09345122e-10]]
+compleated at 2024-08-27 12:52:35.149848

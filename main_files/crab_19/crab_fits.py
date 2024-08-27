@@ -24,6 +24,7 @@ def crab_band_fit_wide_energy(
         **kwargs,
 ):
     """
+    **Warning** Name ist Schall und Rauch.
     crab with band function. break energy fixed at 500keV. Beta is fixed at -2.25
     Pulsar as pl included. 
 
@@ -81,6 +82,8 @@ def crab_band_fit_wide_energy(
     except SyntaxError:
         print('saving plot failed')
     fit.text_summaries(reference_values=False)
+
+    fit.save_chain()
 
     # chainconsumer
     
@@ -397,6 +400,7 @@ config_beuermann_with_data_2 = [
         "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
     },
 ]
+
 
 config_beuermann_with_data_fixed_n = [
     {
@@ -783,6 +787,28 @@ config_crab_pl_1_8_MeV_giant_dataset = [
 
 ]
 
+config_beuermann_with_data_2_same_E = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000_same_E",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann_same_E,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000_same_E",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann_same_E,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1"]
+    },
+]
+
+
 if __name__ == "__main__":
     # for conf in config_2003[1:]:
     #     crab_band_fit(**conf)
@@ -790,7 +816,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_crab_pl_2_8_MeV_fewer_bins_more_data_just_crab:
+    for conf in config_beuermann_with_data_2_same_E:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:

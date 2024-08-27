@@ -646,7 +646,9 @@ def download_and_copy_to_pyspi(name, rev, center: Union[bool, str, list]=False, 
 
 if __name__ == '__main__':
 
-    pass
+    wrapper = SpimodfitWrapper("374_center_test", [374], source="cat_sim_source", source_name="sim_source", E_Bins=normal_E_Bins, center=[-48, -76])
+    wrapper.generate_scripts()
+    wrapper.runscripts()
     
     #get_data_from_pyspi(
     #    "374_100_bins_source", 
