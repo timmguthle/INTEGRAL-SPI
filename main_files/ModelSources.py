@@ -192,9 +192,9 @@ def crab_beuermann_same_E(model, piv=100):
     
     s.n.free = True
     s.n = 3
-
+    s.n.prior = Uniform_prior(lower_bound=1, upper_bound=20)
     s.E1.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
-    s.E2.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
+
     component1 = SpectralComponent("beuermann", shape=s)
     ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
     model.add_source(ps)
