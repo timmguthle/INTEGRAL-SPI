@@ -33,6 +33,7 @@ def gen_smf_data(
         K=7e-4,
         index=-2,
         orig_data_path='/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center/',
+        use_time_elapsed=True,
 ):
     """
     Simulate counts with spimodfit using the convolved sky image. safe data to new folder in pyspi format.
@@ -92,9 +93,16 @@ def gen_smf_data(
     source_counts = np.zeros((len(pointings)*85, len(energy_bins)-1), dtype=np.uint32) # not sure if int is the best...
 
     # Im not at all sure how to use the pl for weighting. I'll try it like that, but K loses its meaning.
-    for i, p_i in enumerate(pointings):
-        for j, det in enumerate(dets):
-            source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * time_elapsed[i*85 + j] * conv_counts[i*19 + j])
+    if use_time_elapsed:
+        for i, p_i in enumerate(pointings):
+            for j, det in enumerate(dets):
+                source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * time_elapsed[i*85 + j] * conv_counts[i*19 + j])
+
+    else:
+        for i, p_i in enumerate(pointings):
+            for j, det in enumerate(dets):
+                source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * conv_counts[i*19 + j])
+
 
     # save the data
     with fits.open(f"{orig_data_path}evts_det_spec_orig.fits") as file:
@@ -126,7 +134,29 @@ test_config_3 = {
     "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_data_normal_new_small_K/",
 }
 
+config_K_1 = {
+    "smf_name": "normal_new",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_1/",
+    "K": 1,
+    "use_time_elapsed": False,
+}
+
+config_K_2 = {
+    "smf_name": "normal_new",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_2/",
+    "K": 2,
+    "use_time_elapsed": False,
+}
+
+
+debugging_config_2 = {
+    "smf_name": "normal_new",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/debugging_2/",
+    "K": 1,
+    "use_time_elapsed": False,
+}
+
 if __name__ == "__main__":
-    gen_smf_data(**test_config_3)
-    gen_smf_data(**test_config_2)
+    gen_smf_data(**debugging_config_2)
+
     print("Data generated.")

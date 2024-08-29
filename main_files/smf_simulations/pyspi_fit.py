@@ -131,12 +131,12 @@ if __name__ == "__main__":
     # )
 
 
-    pyspi_fit_0374_pre_ppc(
-        data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_data_normal_new/",
-        fit_path_extension="test_fit_wo_low_energy",
-        new_pointings=True,
-        Energy_range=(40, 600),
-    )
+    # pyspi_fit_0374_pre_ppc(
+    #     data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_data_normal_new/",
+    #     fit_path_extension="test_fit_wo_low_energy",
+    #     new_pointings=True,
+    #     Energy_range=(40, 600),
+    # )
 
 
     # pyspi_fit_0374_pre_ppc(
@@ -145,4 +145,12 @@ if __name__ == "__main__":
     #     new_pointings=True,
     #     Energy_range=(40, 600),
     # )
+
+    ############################################## K_1 #########################################################
+    pyspi_fit_0374_pre_ppc(
+        data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_2/",
+        fit_path_extension="test_fit",
+        new_pointings=True,
+    )
+
 

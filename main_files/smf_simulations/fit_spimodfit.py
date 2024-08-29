@@ -51,9 +51,27 @@ if __name__ == "__main__":
         }
     ]
 
-    # run_spimodfit_and_threeml_fit(test_configs[1:2])
-    only_good_channels(test_configs[0])
-    only_good_channels(test_configs[1])
+    K_configs = [
+        {
+        "name": "smf_sim_K_1",
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_1/",
+        "rev": [374],
+        "K": 1,
+        'center': [-48, -76]
+        },
+        {
+        "name": "smf_sim_K_2",
+        "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_2/",
+        "rev": [374],
+        "K": 2,
+        'center': [-48, -76]
+        }
+
+    ]
+
+    run_spimodfit_and_threeml_fit(K_configs)
+    # only_good_channels(test_configs[0])
+    # only_good_channels(test_configs[1])
      # first tree done only do the others
 
     
