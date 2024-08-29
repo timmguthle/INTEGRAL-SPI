@@ -38,6 +38,23 @@ def band_eval(x, K, alpha, beta, E0, piv):
 
     return out
 
+def band_eval_no_numba(x, K, alpha, beta, E0, piv):
+    """
+    this function is just to evaluate the model for single x values without using numba, should work with ufloats
+    """
+
+
+    break_point = (alpha - beta) * E0
+
+    if x <= break_point:
+        return K * ((x / piv) ** alpha) * np.exp(-x / E0)
+
+    else:
+
+        factor_ab = np.e ** (beta - alpha) * (break_point / piv) ** (alpha - beta)
+
+        return K * factor_ab * (x / piv) ** beta
+
 
 class C_Band(Function1D, metaclass=FunctionMeta):
     r"""
@@ -123,6 +140,9 @@ class C_Band(Function1D, metaclass=FunctionMeta):
 
 @nb.njit(fastmath=True)
 def beuermann_eval(x, K, alpha, beta, n, E1, E2):
+    return K*np.power(np.power(x/E1,-alpha*n)+np.power(x/E2,-beta*n),-1/n)
+
+def beuermann_eval_no_numba(x, K, alpha, beta, n, E1, E2):
     return K*np.power(np.power(x/E1,-alpha*n)+np.power(x/E2,-beta*n),-1/n)
 
 class Beuermann(Function1D, metaclass=FunctionMeta):
@@ -213,7 +233,6 @@ class Beuermann(Function1D, metaclass=FunctionMeta):
 
         return beuermann_eval(x_, K_, alpha_, beta_, n_, E1_, E2_) * unit_
     
-
 
 class Beuermann_same_E(Function1D, metaclass=FunctionMeta):
     r"""

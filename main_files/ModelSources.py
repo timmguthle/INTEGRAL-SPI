@@ -178,8 +178,9 @@ def crab_beuermann(model, piv=100):
 
 def crab_beuermann_same_E(model, piv=100):
     """
-    Warning: to use this model, change the Beuermann class to have E1 and E2 as the same parameter.
+    **Warning**: change back free n as needed
     """
+
     ra, dec = 83.6333, 22.0144
     
     s = Beuermann_same_E()
@@ -190,9 +191,9 @@ def crab_beuermann_same_E(model, piv=100):
     s.alpha.prior = Uniform_prior(lower_bound=-2.1, upper_bound=-0.5)
     s.beta.prior = Uniform_prior(lower_bound=-4, upper_bound=-1.8)
     
-    s.n.free = True
-    s.n = 3
-    s.n.prior = Uniform_prior(lower_bound=1, upper_bound=20)
+    s.n.free = False
+    s.n = 1.5
+    # s.n.prior = Uniform_prior(lower_bound=1, upper_bound=20)
     s.E1.prior = Uniform_prior(lower_bound=1, upper_bound=1000)
 
     component1 = SpectralComponent("beuermann", shape=s)

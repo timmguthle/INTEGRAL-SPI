@@ -809,6 +809,29 @@ config_beuermann_with_data_2_same_E = [
 ]
 
 
+config_beuermann_with_data_2_same_E_fixed_n = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000_same_E_fixed_n",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann_same_E,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000_same_E_fixed_n",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann_same_E,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1"]
+    },
+]
+
+
+
 if __name__ == "__main__":
     # for conf in config_2003[1:]:
     #     crab_band_fit(**conf)
@@ -816,7 +839,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_beuermann_with_data_2_same_E:
+    for conf in config_beuermann_with_data_2_same_E_fixed_n:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
