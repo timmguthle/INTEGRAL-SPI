@@ -597,7 +597,7 @@ config_low_e_break_2003 = [
     {
         "data_path": "main_files/crab_19/data_2003_center",
         "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_20_400",
-        'new_pointing_clustering': False, 
+        'new_pointing_clustering': True, 
         "energy_range": (20,400),
         "just_crab": False,
         "crab_model": crab_broken_powerlaw,
