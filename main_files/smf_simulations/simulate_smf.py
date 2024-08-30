@@ -148,6 +148,13 @@ config_K_2 = {
     "use_time_elapsed": False,
 }
 
+config_K_01 = {
+    "smf_name": "normal_new",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_01/",
+    "K": 0.1,
+    "use_time_elapsed": False,
+}
+
 
 debugging_config_2 = {
     "smf_name": "normal_new",
@@ -157,6 +164,6 @@ debugging_config_2 = {
 }
 
 if __name__ == "__main__":
-    gen_smf_data(**debugging_config_2)
+    gen_smf_data(**config_K_01)
 
     print("Data generated.")

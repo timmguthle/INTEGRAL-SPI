@@ -69,9 +69,9 @@ if __name__ == "__main__":
 
     ]
 
-    run_spimodfit_and_threeml_fit(K_configs)
-    # only_good_channels(test_configs[0])
-    # only_good_channels(test_configs[1])
+    # run_spimodfit_and_threeml_fit(K_configs)
+    only_good_channels(K_configs[0])
+    only_good_channels(K_configs[1])
      # first tree done only do the others
 
     
