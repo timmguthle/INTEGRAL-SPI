@@ -177,6 +177,7 @@ def crab_band_fit(
         f.write(f"Covariance: {cov}\n")
         f.write(f"compleated at {datetime.now()}")
 
+###############################Band########################################
 config_2003 = [
     {
         "data_path": "./main_files/crab_19/data_2003",
@@ -380,48 +381,7 @@ config_combined_2 = [
     }, 
 ]
 
-config_beuermann_with_data_2 = [
-    {
-        "data_path": "./main_files/crab_19/data_2_2003_comb",
-        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000",
-        'new_pointing_clustering': False,
-        "energy_range": (20,1000),
-        "crab_model": crab_beuermann,
-        "just_crab": True,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
-    },
-    {
-        "data_path": "./main_files/crab_19/data_2_2017_comb",
-        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000",
-        'new_pointing_clustering': False,
-        "energy_range": (20,1000),
-        "crab_model": crab_beuermann,
-        "just_crab": True,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
-    },
-]
 
-
-config_beuermann_with_data_fixed_n = [
-    {
-        "data_path": "./main_files/crab_19/data_2_2003_comb",
-        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000_fixed_n",
-        'new_pointing_clustering': False,
-        "energy_range": (20,1000),
-        "crab_model": crab_beuermann,
-        "just_crab": True,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1", "Crab E2"]
-    },
-    {
-        "data_path": "./main_files/crab_19/data_2_2017_comb",
-        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000_fixed_n",
-        'new_pointing_clustering': False,
-        "energy_range": (20,1000),
-        "crab_model": crab_beuermann,
-        "just_crab": True,
-        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1", "Crab E2"]
-    },
-]
 
 config_band_free_Ec_data_2 = [
     {
@@ -610,6 +570,7 @@ config_fit_psd_eff = [
 
 ]
 
+##############################Low energy broken powerlaw####################################
 
 broken_pl_low_energy = [
     {
@@ -631,6 +592,111 @@ broken_pl_low_energy = [
         "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta"],
     }, 
 ]
+
+config_low_e_break_2003 = [
+    {
+        "data_path": "main_files/crab_19/data_2003_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_20_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (20,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2003_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_25_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (25,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2003_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_30_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (30,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2003_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_40_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (40,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+]
+
+config_low_e_break_2017 = [
+    {
+        "data_path": "main_files/crab_19/data_2017_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_20_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (20,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2017_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_25_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (25,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2017_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_30_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (30,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2017_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_40_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (40,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+]
+
+
+
+config_nustar = [
+    {
+
+        "data_path": "main_files/crab_19/data_SE_2003_low_energy",
+        "fit_path": "main_files/crab_19/fit_2003_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    },
+    {
+        "data_path": "main_files/crab_19/data_2_2017_center",
+        "fit_path": "main_files/crab_19/fit_2017_pl/crab_fit_20_78",
+        'new_pointing_clustering': False,
+        "energy_range": (20,78),
+        "just_crab": True,
+        "crab_model": crab_pl_fixed_pos,
+        "p": ["Crab K", "Crab index"],
+    
+    }
+]
+
+#############################Crab PL 1-8 MeV############################################
 
 config_crab_pl_high_energy = [
     {
@@ -683,29 +749,6 @@ config_crab_pl_1_8_MeV = [
     }, 
 ]
 
-config_nustar = [
-    {
-
-        "data_path": "main_files/crab_19/data_SE_2003_low_energy",
-        "fit_path": "main_files/crab_19/fit_2003_pl/crab_fit_20_78",
-        'new_pointing_clustering': False,
-        "energy_range": (20,78),
-        "just_crab": True,
-        "crab_model": crab_pl_fixed_pos,
-        "p": ["Crab K", "Crab index"],
-    },
-    {
-        "data_path": "main_files/crab_19/data_2_2017_center",
-        "fit_path": "main_files/crab_19/fit_2017_pl/crab_fit_20_78",
-        'new_pointing_clustering': False,
-        "energy_range": (20,78),
-        "just_crab": True,
-        "crab_model": crab_pl_fixed_pos,
-        "p": ["Crab K", "Crab index"],
-    
-    }
-]
-
 config_crab_pl_1_8_MeV_fewer_bins_more_data = [
     {
         "data_path": "./main_files/crab_19/data_2016_17_high_comb",
@@ -727,7 +770,6 @@ config_crab_pl_1_8_MeV_fewer_bins_more_data = [
     }, 
 
 ]
-
 
 config_crab_pl_1_8_MeV_fewer_bins_more_data_just_crab = [
     {
@@ -775,6 +817,7 @@ config_crab_pl_2_8_MeV_fewer_bins_more_data_just_crab = [
 ]
 
 config_crab_pl_1_8_MeV_giant_dataset = [
+    # doesnt work for some reason
     {
         "data_path": "./main_files/crab_19/data_giant_high_comb",
         "fit_path": "./main_files/crab_19/fit_giant/crab_fit_1_8_comb",
@@ -787,6 +830,49 @@ config_crab_pl_1_8_MeV_giant_dataset = [
 
 ]
 
+#############################Beuermann model ########################################
+
+config_beuermann_with_data_2 = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab n", "Crab E1", "Crab E2"]
+    },
+]
+
+config_beuermann_with_data_fixed_n = [
+    {
+        "data_path": "./main_files/crab_19/data_2_2003_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2003_combined/crab_beuermann_fit_20_1000_fixed_n",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1", "Crab E2"]
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2_2017_comb",
+        "fit_path": "./main_files/crab_19/fit_2_2017_combined/crab_beuermann_fit_20_1000_fixed_n",
+        'new_pointing_clustering': False,
+        "energy_range": (20,1000),
+        "crab_model": crab_beuermann,
+        "just_crab": True,
+        "p": ["Crab K", "Crab alpha", "Crab beta", "Crab E1", "Crab E2"]
+    },
+]
 config_beuermann_with_data_2_same_E = [
     {
         "data_path": "./main_files/crab_19/data_2_2003_comb",
@@ -839,7 +925,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_beuermann_with_data_2_same_E_fixed_n:
+    for conf in config_low_e_break_2003:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
