@@ -381,6 +381,27 @@ def get_HE_PE_and_combine():
     )
 
 
+def get_low_e_small_bins():
+    download_and_copy_to_pyspi(
+        "data_low_e_small_bins_2003",
+        rev=[43, 44, 45],
+        E_Bins="all",
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_low_e_small_bins_2003',
+        dataset='SE'
+    )
+    download_and_copy_to_pyspi(
+        "data_low_e_small_bins_2017",
+        rev=[1856, 1857, 1927, 1928],
+        E_Bins="all",
+        center='crab',
+        use_rev_name=False,
+        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_low_e_small_bins_2017',
+        dataset='SE'
+    )
+
+
 if __name__ == '__main__':
     normal_E_Bins_HE = [2000.0, 2378.0, 2828.0, 3363.0, 4000.0, 4756.0, 5656.0, 6727.0, 8000.0]
     energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
@@ -391,7 +412,7 @@ if __name__ == '__main__':
     energies_1_8_MeV_fewer = np.geomspace(2000, 16000, 8, dtype=np.uint64) / 2
     e_bins_1_8_MeV_fewer = list(energies_1_8_MeV_fewer)
 
-    get_giant_dataset()
+    get_low_e_small_bins()
 
     #################################TESTING#################################
     # combine_datasets_PE_HE(
@@ -408,15 +429,15 @@ if __name__ == '__main__':
 
     # get_data_and_combine_20_1000()
 
-    download_and_copy_to_pyspi(
-        "data_SE_2003_low_energy", 
-        rev=[43, 44, 45],
-        E_Bins=bin_low_E,
-        center='crab',
-        use_rev_name=False,
-        path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_SE_2003_low_energy',
-        dataset='SE'
-    )
+    # download_and_copy_to_pyspi(
+    #     "data_SE_2003_low_energy", 
+    #     rev=[43, 44, 45],
+    #     E_Bins=bin_low_E,
+    #     center='crab',
+    #     use_rev_name=False,
+    #     path='/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_19/data_SE_2003_low_energy',
+    #     dataset='SE'
+    # )
 
     # combine_datasets_corrected('./main_files/crab_19/data_2003_center',
     #                  './main_files/crab_19/data_2003_PE',
