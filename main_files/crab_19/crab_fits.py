@@ -636,7 +636,7 @@ config_low_e_break_2017 = [
     {
         "data_path": "main_files/crab_19/data_2017_center",
         "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_20_400",
-        'new_pointing_clustering': False, 
+        'new_pointing_clustering': True, 
         "energy_range": (20,400),
         "just_crab": False,
         "crab_model": crab_broken_powerlaw,
@@ -925,7 +925,7 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_low_e_break_2003:
+    for conf in config_low_e_break_2017:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
     # for conf in config_band_free_Ec_data_2:
