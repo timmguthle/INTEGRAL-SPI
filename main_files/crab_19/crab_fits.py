@@ -1093,7 +1093,7 @@ if __name__ == "__main__":
     ################################TESTING############################################
     test_conf =  {
         "data_path": "main_files/crab_19/data_2003_center",
-        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_30_400",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_30_400_test",
         'new_pointing_clustering': False, 
         "energy_range": (30,400),
         "just_crab": False,

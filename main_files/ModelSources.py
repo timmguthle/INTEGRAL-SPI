@@ -91,7 +91,7 @@ def crab_broken_powerlaw(model, piv=100):
     pl.piv = piv
     pl.alpha.min_value = -2.5
     pl.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-2)
-    pl.alpha.prior = Uniform_prior(lower_bound=-2.5, upper_bound=0)
+    pl.alpha.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-1.9)
     pl.beta.prior = Uniform_prior(lower_bound=-3., upper_bound=-1.6)
     pl.xb = 50.
     pl.xb.free = True
