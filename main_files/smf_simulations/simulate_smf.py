@@ -34,6 +34,7 @@ def gen_smf_data(
         index=-2,
         orig_data_path='/home/tguethle/Documents/spi/Master_Thesis/spiselect_SPI_Data/0374_center/',
         use_time_elapsed=True,
+        use_weighting=True
 ):
     """
     Simulate counts with spimodfit using the convolved sky image. safe data to new folder in pyspi format.
@@ -99,10 +100,15 @@ def gen_smf_data(
                 source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * time_elapsed[i*85 + j] * conv_counts[i*19 + j])
 
     else:
-        for i, p_i in enumerate(pointings):
-            for j, det in enumerate(dets):
-                source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * conv_counts[i*19 + j])
-
+        if use_weighting:
+            for i, p_i in enumerate(pointings):
+                for j, det in enumerate(dets):
+                    source_counts[i*85 + j] = np.random.poisson(powerlaw(bins_mid, K=K, index=index, piv=100) * conv_counts[i*19 + j])
+        else:
+            print("Warning: Not using time elapsed or weighting.")
+            for i, p_i in enumerate(pointings):
+                for j, det in enumerate(dets):
+                    source_counts[i*85 + j] = np.random.poisson(conv_counts[i*19 + j])
 
     # save the data
     with fits.open(f"{orig_data_path}evts_det_spec_orig.fits") as file:
@@ -163,7 +169,33 @@ debugging_config_2 = {
     "use_time_elapsed": False,
 }
 
+test_pl_config = {
+    # can not be used like this anymore because the convolved sky output was overwritten. If you want to use it, rerun spimodfit with changed source model parameters.
+    "smf_name": "374_center_test",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl/",
+    "K": 0.1,
+    "use_time_elapsed": False,
+    "use_weighting": False
+}
+
+test_pl_config_K_10 = {
+    "smf_name": "374_center_test",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl_K_10/",
+    "K": 10,
+    "use_time_elapsed": False,
+    "use_weighting": False
+}
+
+test_pl_config_K_1 = {
+    "smf_name": "374_center_test_2",
+    "data_path": "/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl_K_1/",
+    "K": 1,
+    "use_time_elapsed": False,
+    "use_weighting": False
+}
+
+
 if __name__ == "__main__":
-    gen_smf_data(**config_K_01)
+    gen_smf_data(**test_pl_config_K_1)
 
     print("Data generated.")

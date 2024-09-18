@@ -1,0 +1,7 @@
+Energy range: (20, 600)
+Data path: /home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl_K_1/
+Fit path: /home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl_K_1//test_fit
+Result: [ 8.96866925e-05 -1.95301423e+00]
+Covariance: [[2.63227465e-11 2.60929462e-07]
+ [2.60929462e-07 3.31184148e-03]]
+compleated at 2024-09-18 14:30:24.244559

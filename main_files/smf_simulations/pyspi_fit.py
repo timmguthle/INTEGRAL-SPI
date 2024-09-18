@@ -147,8 +147,15 @@ if __name__ == "__main__":
     # )
 
     ############################################## K_1 #########################################################
+    # pyspi_fit_0374_pre_ppc(
+    #     data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_01/",
+    #     fit_path_extension="test_fit",
+    #     new_pointings=True,
+    # )
+
+    ########################################### pl test ########################################################
     pyspi_fit_0374_pre_ppc(
-        data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/K_01/",
+        data_path="/home/tguethle/Documents/spi/Master_Thesis/main_files/smf_simulations/test_pl_K_1/",
         fit_path_extension="test_fit",
         new_pointings=True,
     )
