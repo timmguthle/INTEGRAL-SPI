@@ -53,6 +53,27 @@ config_1 = [
     }, 
 ]
 
+config_2019 = [
+    {
+        "data_path": "./main_files/crab_19/data_2019_SE",
+        "fit_path": "./main_files/crab_19/fit_2019_combined/crab_band_fit",
+        "energy_range": (20, 600),
+        "revolutions": [2058, 2062, 2063, 2066],
+        "dataset": 'SE',
+        "E_Bins": E_bins_SE,
+        "psd_eff": 0.84
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_PE",
+        "fit_path": "./main_files/crab_19/fit_2019_combined/crab_band_fit_PE",
+        "energy_range": (500, 1000),
+        "revolutions": [2058, 2062, 2063, 2066],
+        "dataset": 'PE',
+        "E_Bins": E_bins_PE,
+        "psd_eff": 0.84
+    }, 
+]
+
 
 def run_spimodfit(config):
     for i,c in enumerate(config):
@@ -115,8 +136,8 @@ def run_three_ml_combined_free_break(config):
             print(f"Fit failed for {c['name']}")
 
 if __name__ == "__main__":
-    # run_spimodfit(config_1)
-    run_three_ml_combined_free_break(config_1)
+    run_spimodfit(config_2019)
+    run_three_ml_combined(config_2019)
 
 
     
