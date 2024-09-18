@@ -570,6 +570,48 @@ config_fit_psd_eff = [
 
 ]
 
+##############################Band 2019####################################
+
+config_2019 = [
+    {
+        "data_path": "./main_files/crab_19/data_2019_comb",
+        "fit_path": "./main_files/crab_19/fit_2019_combined/crab_band_fit_20_1000",
+        'new_pointing_clustering': True,
+        "energy_range": (20,1000),
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_comb",
+        "fit_path": "./main_files/crab_19/fit_2019_combined/crab_band_fit_20_600",
+        'new_pointing_clustering': False,
+        "energy_range": (20,600),
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_comb",
+        "fit_path": "./main_files/crab_19/fit_2019_combined/crab_band_fit_35_1000",
+        'new_pointing_clustering': False,
+        "energy_range": (35,1000),
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_SE",
+        "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_20_600",
+        'new_pointing_clustering': True,
+        "energy_range": (20,600),
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_SE",
+        "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_20_400",
+        'new_pointing_clustering': False,
+        "energy_range": (20,400),
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_SE",
+        "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_30_400",
+        'new_pointing_clustering': False,
+        "energy_range": (30,400),
+    },
+]
+
+
 ##############################Low energy broken powerlaw####################################
 
 broken_pl_low_energy = [
@@ -1159,12 +1201,12 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    for conf in config_low_e_break_2003_no_bound:
+    for conf in config_2019:
         crab_band_fit_wide_energy(**conf)
         print(conf['fit_path'] + " done")
-    for conf in config_low_e_break_2017_no_bound:
-        crab_band_fit_wide_energy(**conf)
-        print(conf['fit_path'] + " done")
+    # for conf in config_low_e_break_2017_no_bound:
+    #     crab_band_fit_wide_energy(**conf)
+    #     print(conf['fit_path'] + " done")
     # for conf in broken_pl_low_energy:
     #     crab_band_fit_wide_energy(**conf)
     #     print(conf['fit_path'] + " done")

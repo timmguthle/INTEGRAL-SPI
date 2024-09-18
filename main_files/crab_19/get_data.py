@@ -402,6 +402,33 @@ def get_low_e_small_bins():
     )
 
 
+def get_2019_data():
+    download_and_copy_to_pyspi(
+        'data_2019_SE',
+        rev=[2058, 2062, 2063, 2066],
+        E_Bins=E_bins_100,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_2019_SE',
+        dataset='SE'
+    )
+
+    download_and_copy_to_pyspi(
+        'data_2019_PE',
+        rev=[2058, 2062, 2063, 2066],
+        E_Bins=E_bins_100,
+        center='crab',
+        use_rev_name=False,
+        path='./main_files/crab_19/data_2019_PE',
+        dataset='PE'
+    )
+
+    combine_datasets_corrected(
+        './main_files/crab_19/data_2019_SE',
+        './main_files/crab_19/data_2019_PE',
+        './main_files/crab_19/data_2019_comb', 0.84)
+
+
 if __name__ == '__main__':
     normal_E_Bins_HE = [2000.0, 2378.0, 2828.0, 3363.0, 4000.0, 4756.0, 5656.0, 6727.0, 8000.0]
     energies_1_8_MeV = np.geomspace(2000, 16000, 13, dtype=np.uint64) / 2
@@ -412,7 +439,8 @@ if __name__ == '__main__':
     energies_1_8_MeV_fewer = np.geomspace(2000, 16000, 8, dtype=np.uint64) / 2
     e_bins_1_8_MeV_fewer = list(energies_1_8_MeV_fewer)
 
-    get_low_e_small_bins()
+    # get_low_e_small_bins()
+    get_2019_data()
 
     #################################TESTING#################################
     # combine_datasets_PE_HE(
