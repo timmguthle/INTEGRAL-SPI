@@ -594,19 +594,22 @@ config_2019 = [
     {
         "data_path": "./main_files/crab_19/data_2019_SE",
         "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_20_600",
-        'new_pointing_clustering': True,
+        'new_pointing_clustering': False,
+        "model": crab_lower_band,
         "energy_range": (20,600),
     },
     {
         "data_path": "./main_files/crab_19/data_2019_SE",
         "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_20_400",
         'new_pointing_clustering': False,
+        "model": crab_lower_band,
         "energy_range": (20,400),
     },
     {
         "data_path": "./main_files/crab_19/data_2019_SE",
         "fit_path": "./main_files/crab_19/fit_2019_SE/crab_band_fit_30_400",
         'new_pointing_clustering': False,
+        "crab_model": crab_lower_band,
         "energy_range": (30,400),
     },
 ]
@@ -1201,9 +1204,9 @@ if __name__ == "__main__":
     # for conf in config_2017:
     #     crab_band_fit(**conf)
     #     print(conf['fit_path'] + " done")
-    # for conf in config_2019[1:]:
-    #     crab_band_fit_wide_energy(**conf)
-    #     print(conf['fit_path'] + " done")
+    for conf in config_2019[3:]:
+        crab_band_fit_wide_energy(**conf)
+        print(conf['fit_path'] + " done")
     # for conf in config_low_e_break_2017_no_bound:
     #     crab_band_fit_wide_energy(**conf)
     #     print(conf['fit_path'] + " done")
@@ -1226,17 +1229,17 @@ if __name__ == "__main__":
 
 
     ################################TESTING############################################
-    conf = {
-        "data_path": "main_files/crab_19/data_2003_center",
-        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_30_400",
-        'new_pointing_clustering': False, 
-        "energy_range": (30,400),
-        "just_crab": False,
-        "crab_model": crab_broken_powerlaw,
-        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
-    }
+    # conf = {
+    #     "data_path": "main_files/crab_19/data_2003_center",
+    #     "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_30_400",
+    #     'new_pointing_clustering': False, 
+    #     "energy_range": (30,400),
+    #     "just_crab": False,
+    #     "crab_model": crab_broken_powerlaw,
+    #     "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    # }
 
-    crab_band_fit_wide_energy(**conf)
+    # crab_band_fit_wide_energy(**conf)
    
     # fig.savefig(f"parameter_fit_distributions.pdf")
 
