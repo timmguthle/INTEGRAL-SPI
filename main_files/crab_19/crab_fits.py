@@ -1236,6 +1236,7 @@ if __name__ == "__main__":
         "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
     }
 
+    crab_band_fit_wide_energy(**conf)
    
     # fig.savefig(f"parameter_fit_distributions.pdf")
 
