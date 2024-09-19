@@ -597,6 +597,7 @@ config_2019 = [
         'new_pointing_clustering': False,
         "model": crab_lower_band,
         "energy_range": (20,600),
+        'p' : ["Crab K", "Crab alpha","A 0535 262 K", "A 0535 262 index"],
     },
     {
         "data_path": "./main_files/crab_19/data_2019_SE",
@@ -604,6 +605,7 @@ config_2019 = [
         'new_pointing_clustering': False,
         "model": crab_lower_band,
         "energy_range": (20,400),
+        'p' : ["Crab K", "Crab alpha", "A 0535 262 K", "A 0535 262 index"],
     },
     {
         "data_path": "./main_files/crab_19/data_2019_SE",
@@ -611,6 +613,7 @@ config_2019 = [
         'new_pointing_clustering': False,
         "crab_model": crab_lower_band,
         "energy_range": (30,400),
+        'p' : ["Crab K", "Crab alpha", "A 0535 262 K", "A 0535 262 index"],
     },
 ]
 
