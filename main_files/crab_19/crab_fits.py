@@ -720,7 +720,17 @@ config_low_e_break_2003_small_bins = [
 ]
 
 config_low_e_break_2003_additional = [
-     {
+    {
+        "data_path": "main_files/crab_19/data_2003_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_23_5_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (23.5,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
+
+    {
         "data_path": "main_files/crab_19/data_2003_center",
         "fit_path": "main_files/crab_19/fit_low_e_break_2003/crab_fit_35_400",
         'new_pointing_clustering': False, 
@@ -877,6 +887,15 @@ config_low_e_break_2017_small_bins = [
 ]
 
 config_low_e_break_2017_additional = [
+    {
+        "data_path": "main_files/crab_19/data_2017_center",
+        "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_23_5_400",
+        'new_pointing_clustering': False, 
+        "energy_range": (23.5,400),
+        "just_crab": False,
+        "crab_model": crab_broken_powerlaw,
+        "p": ["Crab K", "Crab xb", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"],
+    },
     {
         "data_path": "main_files/crab_19/data_2017_center",
         "fit_path": "main_files/crab_19/fit_low_e_break_2017/crab_fit_35_400",
