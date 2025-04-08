@@ -46,6 +46,7 @@ class SpimselectDownloader():
     E_Bins: list, list of energy bins to be used in the analysis. default is wide_E_Bins
         (Note: cant handle to small energy bins. If given spiselect will create best possible. But different form the given.)
     center: str or tuple or False, center of the data selection. Either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates.
+    dataset: str, dataset to be used. Either 'SE' or 'PE' or 'HE'. Default is 'SE'.
     """
     def __init__(self, name: str, revolutions: list[int], E_Bins=wide_E_Bins, center: Union[bool, str, list] =False, dataset: str = 'SE') -> None:
         self.name = name
@@ -205,6 +206,14 @@ class SpimselectDownloader():
         subprocess.run(f"cp {self.base_dir}dataset_{self.name}/spi2/*.fits {compleate_path}", shell=True)
         subprocess.run(f"cp {compleate_path}/evts_det_spec_orig.fits {compleate_path}/evts_det_spec.fits", shell=True)
         print(f'{Fore.GREEN}copied to pyspi{Style.RESET_ALL}')
+
+    def copy_to(self, path:str):
+        if not os.path.exists(path):
+                os.makedirs(path)
+
+        subprocess.run(f"cp {self.base_dir}dataset_{self.name}/spi2/*.fits {path}", shell=True)
+        subprocess.run(f"cp {path}/evts_det_spec_orig.fits {path}/evts_det_spec.fits", shell=True)
+        print(f'{Fore.GREEN}copied to {path}{Style.RESET_ALL}')
 
 
     def adjust_for_spimodfit(self,
