@@ -74,14 +74,59 @@ config_2019 = [
     }, 
 ]
 
+config_2019_pp = [
+    {
+        "data_path": "./main_files/crab_19/data_2019_SE",
+        "fit_path": "./main_files/crab_19/fit_2019_pp/crab_band_fit",
+        "energy_range": (20, 600),
+        "revolutions": [2058, 2062, 2063, 2066],
+        "dataset": 'SE',
+        "E_Bins": E_bins_SE,
+        "psd_eff": 0.84
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2019_PE",
+        "fit_path": "./main_files/crab_19/fit_2019_pp/crab_band_fit_PE",
+        "energy_range": (500, 1000),
+        "revolutions": [2058, 2062, 2063, 2066],
+        "dataset": 'PE',
+        "E_Bins": E_bins_PE,
+        "psd_eff": 0.84
+    }, 
+]
+
+config_2003_pp = [
+    {
+        "data_path": "./main_files/crab_19/data_2003",
+        "fit_path": "./main_files/crab_19/fit_2003_pp/crab_band_fit",
+        "energy_range": (20, 600),
+        "revolutions": [43, 44, 45],
+        "dataset": 'SE',
+        "E_Bins": E_bins_SE,
+        "psd_eff": 0.88
+    },
+    {
+        "data_path": "./main_files/crab_19/data_2003_PE",
+        "fit_path": "./main_files/crab_19/fit_2003_pp/crab_band_fit_PE",
+        "energy_range": (500, 1000),
+        "revolutions": [43, 44, 45],
+        "dataset": 'PE',
+        "E_Bins": E_bins_PE,
+        "psd_eff": 0.88
+    }, 
+]
+
+
 
 def run_spimodfit(config):
     for i,c in enumerate(config):
+        # add the required parameters to the config so it can be used in the wrapper
         c['source'] = 'cat_crab'
         c['center'] = 'crab'
         fit_path = c['fit_path']
         name = fit_path.split('/')[-2] + '_' + fit_path.split('/')[-1]
         c['name'] = name
+
         w = SpimodfitWrapper(**c)
         print(c)
         w.generate_scripts()
@@ -90,6 +135,9 @@ def run_spimodfit(config):
 def run_three_ml_combined(config):
     l = len(config)
     assert l % 2 == 0, "The number of datasets must be even"
+
+    # this is overly complicated and should be simplified
+    # but it works so I will leave it for now
 
     for i in range(l//2):
         c = config[i]
@@ -136,8 +184,8 @@ def run_three_ml_combined_free_break(config):
             print(f"Fit failed for {c['name']}")
 
 if __name__ == "__main__":
-    run_spimodfit(config_2019)
-    run_three_ml_combined(config_2019)
+    run_spimodfit(config_2019_pp)
+    run_three_ml_combined(config_2019_pp)
 
 
     
