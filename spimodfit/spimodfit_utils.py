@@ -62,7 +62,7 @@ class SpimselectDownloader():
         assert center == 'crab' or center == False or len(center) == 2, "center must be either 'crab', False or a tuple of two floats (chi, psi) in degrees GALACTIC coordinates."
         assert dataset in ['SE', 'PE', "HE"], "dataset must be either 'SE' or 'PE' or 'HE'"
 
-        os.chdir(self.base_dir)
+        
 
     def define_bins(self, E_Bins):
         if E_Bins == 'all':
@@ -81,6 +81,7 @@ class SpimselectDownloader():
         
         **Warning**: spiselect will not ovewrite existing files. If you want to rerun the script, you have to delete the existing files first!
         """
+        os.chdir(self.base_dir)
         self._generatespiselect()
 
         print('running spiselect...')
@@ -93,6 +94,7 @@ class SpimselectDownloader():
 
     def _generatespiselect(self):
         # generate the spiselect script
+        os.chdir(self.base_dir)
 
         with open(self.base_dir + self.spiselect_template, 'r') as f:
             lines = f.readlines()
