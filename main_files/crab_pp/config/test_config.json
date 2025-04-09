@@ -5,7 +5,7 @@
             "data_name": "test_data_2008",
             "revolutions": [665, 666],
             "center": "crab",
-            "dataset": "SE"
+            "dataset": "combined"
         },
         "nr_ebins": 100,
         "energy_range": [20,1000],

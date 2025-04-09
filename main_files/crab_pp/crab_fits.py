@@ -17,6 +17,8 @@ import json
 BASE_DATA_PATH = "/home/tguethle/data1/pyspi_data"
 BASE_FIT_PATH = "./main_files/crab_pp"
 
+CONFIG_DIRECTORY = "./main_files/crab_pp/config"
+
 
 
 def extract_meta_data(data_path):
@@ -217,8 +219,8 @@ def main():
 
     config_file = sys.argv[1]
 
-    if not os.path.isfile(config_file):
-        print(f"Error: {config_file} does not exist.")
+    if not os.path.isfile(CONFIG_DIRECTORY + "/" + config_file):
+        print(f"Error: {config_file} does not exist in {CONFIG_DIRECTORY}.")
         sys.exit(1)
 
     with open(config_file, 'r') as f:
@@ -227,9 +229,8 @@ def main():
     for name, config_values in config.items():
         get_data(config_values)
         print(f"Data for {name} loaded.")
-        run_pyspi_fit(name, config_values)
-        print(f"Fit for {name} completed.")
-
+        # run_pyspi_fit(name, config_values)
+        # print(f"Fit for {name} completed.")
 
 
 if __name__ == "__main__":
