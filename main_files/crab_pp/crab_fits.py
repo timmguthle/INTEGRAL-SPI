@@ -235,8 +235,8 @@ def main():
     for name, config_values in config.items():
         get_data(config_values)
         print(f"Data for {name} loaded.")
-        # run_pyspi_fit(name, config_values)
-        # print(f"Fit for {name} completed.")
+        run_pyspi_fit(name, config_values)
+        print(f"Fit for {name} completed.")
 
 
 if __name__ == "__main__":
