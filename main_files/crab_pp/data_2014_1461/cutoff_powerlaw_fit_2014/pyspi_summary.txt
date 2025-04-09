@@ -1,0 +1,44 @@
+Fit name: cutoff_powerlaw_fit_2014
+Energy range: [20, 1000]
+Data path: /home/tguethle/data1/pyspi_data/data_2014_1461
+Fit path: ./main_files/crab_pp/data_2014_1461/cutoff_powerlaw_fit_2014
+Result: [ 8.88957336e-04 -1.91053524e+00  4.11154710e+02  4.04266687e-07
+ -4.82337460e+00]
+Covariance: [[ 3.97038026e-10  2.80575899e-07 -7.24095238e-04  2.31805133e-12
+   2.05495930e-06]
+ [ 2.80575899e-07  2.04812764e-04 -5.03074708e-01  1.56645668e-09
+   1.41426555e-03]
+ [-7.24095238e-04 -5.03074708e-01  1.40973655e+03 -3.62168900e-06
+  -3.24253457e+00]
+ [ 2.31805133e-12  1.56645668e-09 -3.62168900e-06  6.59699091e-13
+   4.63334375e-07]
+ [ 2.05495930e-06  1.41426555e-03 -3.24253457e+00  4.63334375e-07
+   4.29416736e-01]]
+compleated at 2025-04-09 21:51:55.664540 in the total time of 1:33:18.009970
+
+{
+    "data": {
+        "data_name": "data_2014_1461",
+        "revolutions": [
+            1461,
+            1462
+        ],
+        "center": "crab",
+        "dataset": "combined",
+        "psd_eff": 0.84
+    },
+    "nr_ebins": 100,
+    "energy_range": [
+        20,
+        1000
+    ],
+    "just_crab": false,
+    "crab_model": "crab_cutoff_powerlaw",
+    "p": [
+        "Crab K",
+        "Crab index",
+        "Crab xc",
+        "A 0535 262 K",
+        "A 0535 262 index"
+    ]
+}

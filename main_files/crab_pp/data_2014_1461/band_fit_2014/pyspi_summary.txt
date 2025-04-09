@@ -1,0 +1,44 @@
+Fit name: band_fit_2014
+Energy range: [20, 1000]
+Data path: /home/tguethle/data1/pyspi_data/data_2014_1461
+Fit path: ./main_files/crab_pp/data_2014_1461/band_fit_2014
+Result: [ 8.52696482e-04 -1.93722429e+00 -2.34469723e+00  3.13539158e-07
+ -4.76861499e+00]
+Covariance: [[ 1.69009983e-11  1.80563140e-08 -5.62055227e-08  2.71836807e-13
+   2.77289684e-07]
+ [ 1.80563140e-08  2.43774924e-05 -6.40831058e-05  1.28280692e-10
+   1.24699592e-04]
+ [-5.62055227e-08 -6.40831058e-05  4.11497691e-03 -1.29777328e-09
+  -1.76089113e-03]
+ [ 2.71836807e-13  1.28280692e-10 -1.29777328e-09  3.74478296e-13
+   3.36146522e-07]
+ [ 2.77289684e-07  1.24699592e-04 -1.76089113e-03  3.36146522e-07
+   4.00424171e-01]]
+compleated at 2025-04-09 23:01:10.197741 in the total time of 1:09:14.588362
+
+{
+    "data": {
+        "data_name": "data_2014_1461",
+        "revolutions": [
+            1461,
+            1462
+        ],
+        "center": "crab",
+        "dataset": "combined",
+        "psd_eff": 0.84
+    },
+    "nr_ebins": 100,
+    "energy_range": [
+        20,
+        1000
+    ],
+    "just_crab": false,
+    "crab_model": "crab_band",
+    "p": [
+        "Crab K",
+        "Crab alpha",
+        "Crab beta",
+        "A 0535 262 K",
+        "A 0535 262 index"
+    ]
+}
