@@ -217,10 +217,10 @@ def main():
         print("No config file given! \nUsage: python get_data.py <config_file>")
         sys.exit(1)
 
-    config_file = sys.argv[1]
+    config_file = CONFIG_DIRECTORY + "/" + sys.argv[1]
 
-    if not os.path.isfile(CONFIG_DIRECTORY + "/" + config_file):
-        print(f"Error: {config_file} does not exist in {CONFIG_DIRECTORY}.")
+    if not os.path.isfile(config_file):
+        print(f"Error: {config_file} does not exist!")
         sys.exit(1)
 
     with open(config_file, 'r') as f:
