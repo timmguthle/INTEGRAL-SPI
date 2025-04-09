@@ -103,6 +103,8 @@ def get_data(config_values):
                                                config_values['data']['revolutions'],
                                                  center=config_values['data']['center'],
                                                    E_Bins=E_Bins, dataset=config_values['data']['dataset'])
+            # change base_dir for work on necromancer
+            downloader.base_dir = "/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/"
             downloader.generate_and_run()
             downloader.adjust_for_pyspi()
             downloader.copy_to(data_path)
@@ -111,6 +113,8 @@ def get_data(config_values):
                                                config_values['data']['revolutions'],
                                                  center=config_values['data']['center'],
                                                    E_Bins=E_Bins, dataset="SE")
+        # change base_dir for work on necromancer
+        downloader_SE.base_dir = "/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/"
         downloader_SE.generate_and_run()
         downloader_SE.adjust_for_pyspi()
 
@@ -118,6 +122,8 @@ def get_data(config_values):
                                                config_values['data']['revolutions'],
                                                  center=config_values['data']['center'],
                                                    E_Bins=E_Bins, dataset="PE")
+        # change base_dir for work on necromancer
+        downloader_PE.base_dir = "/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/"
         downloader_PE.generate_and_run()
         downloader_PE.adjust_for_pyspi()
 
