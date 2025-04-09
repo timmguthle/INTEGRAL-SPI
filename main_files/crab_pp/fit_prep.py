@@ -13,7 +13,7 @@ from ModelSources import *
 import json
 
 BASE_DATA_PATH = "/home/tguethle/data1/pyspi_data"
-BASE_FIT_PATH = "./main_files/crab_pp"
+BASE_FIT_PATH = "/home/tguethle/INTEGRAL-SPI/main_files/crab_pp"
 
 CONFIG_DIRECTORY = "./main_files/crab_pp/config"
 
