@@ -180,6 +180,7 @@ class SpimselectDownloader():
             hdul[1].data = Table.as_array(t)
             assert hdul[1].data.shape[0] == 85*nr_pointings, "wrong shape of evts_det_spec.fits process failed"
             hdul.writeto("spi2/evts_det_spec_orig.fits")
+            hdul.writeto("spi2/evts_det_spec.fits", overwrite=True)
 
         # change back directory
         os.chdir(self.base_dir)

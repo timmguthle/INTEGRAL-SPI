@@ -127,8 +127,8 @@ def get_data(config_values):
         downloader_PE.generate_and_run()
         downloader_PE.adjust_for_pyspi()
 
-        combine_datasets(f"/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/dataset_{config_values['data']['data_name']}_SE/spi2/",
-                                    f"/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/dataset_{config_values['data']['data_name']}_SE/spi2/",
+        combine_datasets(f"/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/dataset_{config_values['data']['data_name']}_SE/spi2",
+                                    f"/home/tguethle/data1/cookbook/cookbook/examples/automated_Crab/dataset_{config_values['data']['data_name']}_SE/spi2",
                                       data_path, config_values['data'].get("psd_eff", 0.85))
 
 
