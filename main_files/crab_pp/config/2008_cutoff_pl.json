@@ -1,0 +1,18 @@
+{
+    "cutoff_powerlaw_fit": {
+
+        "data": {
+            "data_name": "test_data_2008",
+            "revolutions": [665, 666],
+            "center": "crab",
+            "dataset": "combined"
+        },
+        "nr_ebins": 100,
+        "energy_range": [20,1000],
+        "just_crab": false,
+
+        "crab_model": "crab_cutoff_powerlaw",
+        "p": ["Crab K", "Crab index", "Crab xc", "A 0535 262 K", "A 0535 262 index"]
+
+    }
+}

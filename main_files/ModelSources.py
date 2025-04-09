@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath('./main_files'))
 
 import numpy as np
-from astromodels import Powerlaw, Broken_powerlaw, SmoothlyBrokenPowerLaw, Line, Log_uniform_prior, Uniform_prior, PointSource, SpectralComponent, Model
+from astromodels import Powerlaw, Broken_powerlaw, SmoothlyBrokenPowerLaw, Line, Log_uniform_prior, Uniform_prior, PointSource, SpectralComponent, Model, Cutoff_powerlaw
 from CustomAstromodels import C_Band, Beuermann, Beuermann_same_E
 
 def define_sources(source_funcs):    
@@ -150,6 +150,22 @@ def crab_band(model, piv=100):
     s.beta.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-2.1)
     s.xp.prior = Uniform_prior(lower_bound=300, upper_bound=1000)
     s.xp.free = False
+    component1 = SpectralComponent("band", shape=s)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    model.add_source(ps)
+    return model
+
+def crab_cutoff_powerlaw(model, piv=100):
+    ra, dec = 83.6333, 22.0144
+    
+    s = Cutoff_powerlaw()
+    s.piv = piv
+    s.index = -2.0
+    #s.xc = 500
+    s.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-3)
+    s.index.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-1.5)
+    s.xc.prior = Uniform_prior(lower_bound=20, upper_bound=1000)
+
     component1 = SpectralComponent("band", shape=s)
     ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
     model.add_source(ps)

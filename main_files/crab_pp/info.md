@@ -39,4 +39,5 @@ maybe even use spimodfit in crab 19 as the data is already there.
 }
 ```
 
-
+# Notes 
+- Test run with test_config.json is working fine now.

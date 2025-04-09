@@ -209,12 +209,14 @@ def run_pyspi_fit(name: str, config_values: dict, binning_func = no_rebinning,pa
     np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix")
 
     with open(f"{fit_path}/pyspi_summary.txt", "w") as f:
+        f.write(f"Fit name: {name}\n")
         f.write(f"Energy range: {energy_range}\n")
         f.write(f"Data path: {data_path}\n")
         f.write(f"Fit path: {fit_path}\n")
         f.write(f"Result: {val}\n")
         f.write(f"Covariance: {cov}\n")
         f.write(f"compleated at {datetime.now()}")
+        f.write(json.dumps(config_values))
 
 
 def main():
