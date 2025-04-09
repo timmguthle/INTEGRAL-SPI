@@ -41,3 +41,6 @@ maybe even use spimodfit in crab 19 as the data is already there.
 
 # Notes 
 - Test run with test_config.json is working fine now.
+
+- It might be useful to split the file into two, on as a "Preparation" file and one as a "Analysis" file.
+    - The preparation file handles the data and the clustering, it should be run on a single process to avoid problems with the memory and safe resources. the main analysis file can be run on multiple processes via mpiexec.
