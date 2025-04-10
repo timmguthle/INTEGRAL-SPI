@@ -9,9 +9,19 @@ as there is no need to copy the data manually to necromancer.
 
 if the data folder already exists, it will be used. if not crab_fits.py will run spiselect and create the data folder.
 
-## Spimodfit 
+## New version
+
+first run fit_prep.py with a single process. this will create the data folder, cluster the pointings and create the fit folder.
+Only after that run fit_run.py with multiple processes. this will run the fit on the data and safe it in the fit folder.
+
+# Spimodfit 
 I think its still best to use spimodfit on ga76pc. There is no need to change much in the code. only adjust the paths.
 maybe even use spimodfit in crab 19 as the data is already there.
+
+## with config files
+
+My current plan: run spimodfit similar to fit_run.py with the same config file. to do this run spimodfit_run.py. do this on ga76pc.
+the spectral fitting after that is different. maybe do this in a jupyter notebook.
 
 
 # config files

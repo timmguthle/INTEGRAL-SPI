@@ -255,12 +255,12 @@ class SpimodfitWrapper():
             self,
             name: str,
             revolutions: list, 
-            source=False, 
+            source:Union[bool, str] =False, 
             source_name="Crab", 
             E_Bins=wide_E_Bins, 
             convsky_output=True, 
             dataset: str = 'SE', 
-            center=False,
+            center:Union[bool, str]=False,
             **kwargs) -> None:
         self.name = name # name of the parameter files and the generated directories. replaces "skymap43" in the template files
         self.spiselect_name = f'spiselectscw.dataset_{self.name}.par'
