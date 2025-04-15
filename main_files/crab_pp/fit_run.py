@@ -105,9 +105,11 @@ def main():
         config = json.load(f)
 
     for name, config_values in config.items():
+        
+        if name == "band_fit_727":
 
-        run_pyspi_fit(name, config_values)
-        print(f"Fit for {name} completed.")
+            run_pyspi_fit(name, config_values)
+            print(f"Fit for {name} completed.")
 
 
 if __name__ == "__main__":
