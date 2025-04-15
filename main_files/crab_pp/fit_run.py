@@ -104,12 +104,18 @@ def main():
     with open(config_file, 'r') as f:
         config = json.load(f)
 
-    for name, config_values in config.items():
-        
-        if name == "band_fit_727":
+    if len(sys.argv) == 3:
+        # if a specific name is given, only run that one
+        name = sys.argv[2]
+        if name not in config.keys():
+            print(f"Error: {name} not found in config file!")
+            sys.exit(1)
+        config = {name: config[name]}
 
-            run_pyspi_fit(name, config_values)
-            print(f"Fit for {name} completed.")
+    for name, config_values in config.items():
+
+        run_pyspi_fit(name, config_values)
+        print(f"Fit for {name} completed.")
 
 
 if __name__ == "__main__":

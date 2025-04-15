@@ -50,6 +50,8 @@ the spectral fitting after that is different. maybe do this in a jupyter noteboo
 ```
 
 # Notes 
+
+- fit_run.py can recive a second argument. if you only want to run one fit from the config file, give the name of this fit as the second argument. If no argument is given, all fits will be run.
 - Test run with test_config.json is working fine now.
 
 - It might be useful to split the file into two, on as a "Preparation" file and one as a "Analysis" file.
