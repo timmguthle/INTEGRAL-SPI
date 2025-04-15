@@ -2,7 +2,7 @@
     "cutoff_powerlaw_fit_1927": {
 
         "data": {
-            "data_name": "data_rev_727",
+            "data_name": "data_rev_1927",
             "revolutions": [1927, 1928],
             "center": "crab",
             "dataset": "combined",
