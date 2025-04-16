@@ -125,15 +125,15 @@ def main():
 
     for name, config_values in config.items():
         #run the spimodfit scripts
-        # if config_values['data']['dataset'] == "SE":
-        #     run_spimodfit_SE(name, config_values)
-        # elif config_values['data']['dataset'] == "PE":
-        #     run_spimodfit_PE(name, config_values)
-        # elif config_values['data']['dataset'] == "combined":
-        #     run_spimodfit_SE(name, config_values)
-        #     run_spimodfit_PE(name, config_values)
-        if name == "cutoff_powerlaw_fit_727":
-            continue
+        if config_values['data']['dataset'] == "SE":
+            run_spimodfit_SE(name, config_values)
+        elif config_values['data']['dataset'] == "PE":
+            run_spimodfit_PE(name, config_values)
+        elif config_values['data']['dataset'] == "combined":
+            run_spimodfit_SE(name, config_values)
+            run_spimodfit_PE(name, config_values)
+        # if name == "cutoff_powerlaw_fit_727":
+        #     continue
 
         # try to use the three ml fit
         apply_model_to_spimodfit(name, config_values)
