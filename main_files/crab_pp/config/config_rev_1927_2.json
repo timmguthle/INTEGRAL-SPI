@@ -1,0 +1,20 @@
+{
+    
+    "band_fit_1927_test_new_smf": {
+
+        "data": {
+            "data_name": "data_rev_1927",
+            "revolutions": [1927, 1928],
+            "center": "crab",
+            "dataset": "combined",
+            "psd_eff": 0.84
+        },
+        "nr_ebins": 100,
+        "energy_range": [20,1000],
+        "just_crab": false,
+
+        "crab_model": "crab_band",
+        "p": ["Crab K", "Crab alpha", "Crab beta", "A 0535 262 K", "A 0535 262 index"]
+
+    }
+}

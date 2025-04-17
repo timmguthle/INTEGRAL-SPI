@@ -272,7 +272,9 @@ class SpimodfitWrapper():
         self.base_dir = "/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/"
         # any parameter file should do. Here I chose one for rev 43
         self.spiselect_template = "spiselectscw.dataset_skymap43.par"
-        self.background_template = "background_model_skymap43.pro"
+
+        self.background_template_SE = "background_model_SE_02.pro" # this is the new version with the corrected factor 2
+        self.background_template_PE = "background_model_PSD_02.pro"
         self.spimodfit_template = "spimodfit.fit_Crab_skymap43_noSource.par"
         self.threeML_template = "adjust4threeML_template.pro"
         self.dataset = dataset
@@ -343,7 +345,12 @@ class SpimodfitWrapper():
 
         assuming the spiselct dictionary is already generated
         '''
-        with open(self.base_dir + self.background_template, 'r') as f:
+        if self.dataset == 'PE':    
+            bkg_template = self.background_template_PE
+        else:
+            bkg_template = self.background_template_SE
+
+        with open(self.base_dir + bkg_template, 'r') as f:
             lines = f.readlines()
 
         lines[9] = f"spidir = '{self.base_dir}dataset_{self.name}/spi/'\n"
