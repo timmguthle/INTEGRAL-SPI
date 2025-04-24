@@ -8,6 +8,8 @@ import sim_source_real_bkg.gen_data_and_pyspi_fit as gf
 import spimodfit.threeml_spimodfit_fit as tsf
 import json
 
+DEBUG = False
+
 CONFIG_DIRECTORY = "./main_files/crab_pp/config"
 BASE_FIT_PATH = "/home/tguethle/Documents/spi/Master_Thesis/main_files/crab_pp"
 
@@ -18,18 +20,35 @@ energies2 = np.geomspace(1000, 2000, 21, dtype=np.uint64) / 2
 E_bins_PE = list(energies2)
 base_path = '/home/tguethle/cookbook/SPI_cookbook/examples/automated_Crab/'
 
+def generate_Ebins(number_bins: int, energy_range: list):
+    """
+    Generate the energy bins for the spimodfit run.
+    """
+    base_bins = np.geomspace(200, 1200, number_bins, dtype=np.uint64) / 2
+
+    low_index = np.argmin(abs(base_bins - energy_range[0]))
+    high_index = np.argmin(abs(base_bins - energy_range[1]))
+
+    return list(base_bins[low_index:high_index + 1])
 
 def run_spimodfit_SE(name:str, config_values:dict):
 
     name = name + "_smf_SE"
-    energies = np.geomspace(config_values["energy_range"][0] * 2, config_values["energy_range"][1] * 2, config_values["nr_ebins"], dtype=np.uint64) / 2
-    E_Bins = list(energies)
+
+    # from old version, dont know if I want to use this
+    # energies = np.geomspace(config_values["energy_range"][0] * 2, config_values["energy_range"][1] * 2, config_values["nr_ebins"], dtype=np.uint64) / 2
+    # E_Bins = list(energies)
+
+    if config_values["use_range_test_bins"]:
+        E_bins = generate_Ebins(config_values["nr_ebins"], config_values["energy_range"])
+    else:
+        E_bins = E_bins_SE
 
     w = SpimodfitWrapper(
         name=name,
         revolutions=config_values['data']['revolutions'],
         source='cat_crab',
-        E_Bins=E_bins_SE,
+        E_Bins=E_bins,
         convsky_output=False,
         dataset='SE',
         center='crab',
@@ -103,6 +122,25 @@ def apply_model_to_spimodfit(name:str, config_values:dict):
             except RuntimeError:
                 print(f"Fit failed for {name}")
 
+    elif config_values['data']['dataset'] == "SE":
+        fit_path = BASE_FIT_PATH + f"/{config_values['data']['data_name']}/{name}_smf_SE"
+
+        if config_values["crab_model"] == "crab_powerlaw":
+            try:
+                (val, cov, err, logL) = tsf.run_fit_pl( 
+                    path=f"{base_path}fit_Crab_{name}_smf_SE",
+                    fit_path=fit_path,
+                    save_figure=True,
+    
+                )
+                tsf.save_fit(val, cov, fit_path)
+                p = ["Crab K", "Crab index"]
+                np.savetxt(f"{fit_path}/fit_val.txt", val, header=" ".join(p))
+                np.savetxt(f"{fit_path}/fit_cov.txt", cov, header="cov matrix") # type: ignore (with return_objects=False cov can be saved)
+                return
+            except RuntimeError:
+                print(f"Fit failed for {name}")
+        
 
     print(f"No model avaliable for {name}. three ml fit must be done manually.")
 
@@ -124,19 +162,29 @@ def main():
         config = json.load(f)
 
     for name, config_values in config.items():
-        #run the spimodfit scripts
-        if config_values['data']['dataset'] == "SE":
-            run_spimodfit_SE(name, config_values)
-        elif config_values['data']['dataset'] == "PE":
-            run_spimodfit_PE(name, config_values)
-        elif config_values['data']['dataset'] == "combined":
-            run_spimodfit_SE(name, config_values)
-            run_spimodfit_PE(name, config_values)
-        # if name == "cutoff_powerlaw_fit_727":
-        #     continue
+        # skip first
 
-        # try to use the three ml fit
-        apply_model_to_spimodfit(name, config_values)
+
+        if DEBUG:
+            print(name)
+            print(config_values)
+            print(generate_Ebins(config_values["nr_ebins"], config_values["energy_range"]))
+            print("\n\n")
+        else:
+            #run the spimodfit scripts
+            if config_values['data']['dataset'] == "SE":
+                run_spimodfit_SE(name, config_values)
+            elif config_values['data']['dataset'] == "PE":
+                run_spimodfit_PE(name, config_values)
+            elif config_values['data']['dataset'] == "combined":
+                run_spimodfit_SE(name, config_values)
+                run_spimodfit_PE(name, config_values)
+
+            # try to use the three ml fit
+            apply_model_to_spimodfit(name, config_values)
+            
+
+
         
 
         

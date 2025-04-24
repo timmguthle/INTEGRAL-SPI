@@ -205,6 +205,62 @@ def run_fit_cutoff_powerlaw(
 
     return val, cov, err, logL
 
+
+def run_fit_pl(
+            path: str,
+            fit_path: str,
+            piv = 300,
+            save_figure=True,
+            fixed_break=False,
+
+    ):
+    """
+    run the fit for the range test configs
+    """
+    if not os.path.exists(fit_path):
+        os.makedirs(fit_path)
+
+    crab_SE = OGIPLike("crab_SE", observation=f'{path}/spectra_Crab.fits', response=f'{path}/spectral_response.rmf.fits')
+    #crab_SE.set_active_measurements('100 - 600')
+
+
+    ps_data = DataList(crab_SE)
+
+    spec = Powerlaw()
+
+    ps = PointSource('crab',l=0,b=0,spectral_shape=spec)
+
+    ps_model = Model(ps)
+
+
+    ps_model.crab.spectrum.main.Powerlaw.index = -2.0
+    ps_model.crab.spectrum.main.Powerlaw.index.min_value = -2.5
+    ps_model.crab.spectrum.main.Powerlaw.index.max_value = -1.5
+
+    ps_model.crab.spectrum.main.Powerlaw.K = 8e-4
+
+    ps_model.crab.spectrum.main.Powerlaw.piv = piv
+    
+    ps_jl = JointLikelihood(ps_model, ps_data)
+
+    best_fit_parameters_ps, likelihood_values_ps = ps_jl.fit()
+
+    
+    ps_jl.restore_best_fit()
+
+    val = np.array(best_fit_parameters_ps["value"])
+    err = np.array(best_fit_parameters_ps["error"])
+    cor = ps_jl.correlation_matrix
+    cov = cor * err[:, np.newaxis] * err[np.newaxis, :]
+    logL = float(likelihood_values_ps.values[1])
+
+    if save_figure:
+        fig = display_spectrum_model_counts(ps_jl, step=True)
+        fig.savefig(f'{fit_path}/sim_spource.pdf')
+        print(f'fit saved at {fit_path}/sim_spource.pdf')
+
+    return val, cov, err, logL
+
 def run_fit(channels: list[str],
             dataset, 
             save_figure=False, 

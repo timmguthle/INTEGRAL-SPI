@@ -1,0 +1,111 @@
+{
+    "range_test_20bins_100_600": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [100,600],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    },
+    "range_test_20bins_100_500": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [100,500],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    },
+    "range_test_20bins_100_400": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [100,400],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    },
+    "range_test_20bins_200_600": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [200,600],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    },
+    "range_test_20bins_200_500": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [200,500],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    },
+    "range_test_20bins_300_600": {
+
+        "data": {
+            "data_name": "data_2003_SE",
+            "revolutions": [43,44,45],
+            "center": "crab",
+            "dataset": "SE"
+
+        },
+        "use_range_test_bins": true,
+        "nr_ebins": 20,
+        "energy_range": [300,600],
+        "just_crab": false,
+
+        "crab_model": "crab_powerlaw",
+        "p": ["Crab K", "Crab index"]
+
+    }
+
+}
