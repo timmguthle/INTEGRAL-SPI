@@ -171,6 +171,21 @@ def crab_cutoff_powerlaw(model, piv=100):
     model.add_source(ps)
     return model
 
+def crab_powerlaw(model, piv=300):
+    ra, dec = 83.6333, 22.0144
+    
+    s = Powerlaw()
+    s.piv = piv
+    s.index = -2.0
+    #s.xc = 500
+    s.K.prior = Log_uniform_prior(lower_bound=5e-4, upper_bound=1e-3)
+    s.index.prior = Uniform_prior(lower_bound=-2.5, upper_bound=-1.5)
+
+    component1 = SpectralComponent("band", shape=s)
+    ps = PointSource("Crab", ra=ra, dec=dec, components=[component1])
+    model.add_source(ps)
+    return model
+
 def crab_beuermann(model, piv=100):
     ra, dec = 83.6333, 22.0144
     
