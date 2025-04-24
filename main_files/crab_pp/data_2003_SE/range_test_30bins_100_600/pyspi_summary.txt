@@ -1,0 +1,33 @@
+Fit name: range_test_30bins_100_600
+Energy range: [100, 600]
+Data path: /home/tguethle/data1/pyspi_data/data_2003_SE
+Fit path: ./main_files/crab_pp/data_2003_SE/range_test_30bins_100_600
+Result: [ 5.99115788e-04 -2.02099920e+00]
+Covariance: [[ 3.21215878e-11 -9.31811494e-08]
+ [-9.31811494e-08  4.49492420e-04]]
+compleated at 2025-04-24 16:28:07.727783 in the total time of 0:18:27.856945
+
+{
+    "data": {
+        "data_name": "data_2003_SE",
+        "revolutions": [
+            43,
+            44,
+            45
+        ],
+        "center": "crab",
+        "dataset": "SE"
+    },
+    "use_range_test_bins": true,
+    "nr_ebins": 30,
+    "energy_range": [
+        100,
+        600
+    ],
+    "just_crab": false,
+    "crab_model": "crab_powerlaw",
+    "p": [
+        "Crab K",
+        "Crab index"
+    ]
+}
